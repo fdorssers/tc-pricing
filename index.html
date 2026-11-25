@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TC Plant Prices</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f7f5; --surface: #ffffff; --text: #1d2420; --muted: #66706a; --border: #e2e6e1;
+    --accent: #2f6b3f; --up: #b42318; --down: #1f7a44; --best-bg: #e3f3e8; --best-text: #14532d;
+    --stale: #9aa39d; --row-hover: #f1f4f0;
+    --s0: #2563eb; --s1: #c2410c; --s2: #0f766e; --s3: #7c3aed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121614; --surface: #1a201c; --text: #e6ebe7; --muted: #9aa59e; --border: #2c3530;
+      --accent: #7fc48f; --up: #f87171; --down: #4ade80; --best-bg: #173323; --best-text: #9ae6b4;
+      --stale: #66706a; --row-hover: #212923;
+      --s0: #60a5fa; --s1: #fb923c; --s2: #2dd4bf; --s3: #a78bfa;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121614; --surface: #1a201c; --text: #e6ebe7; --muted: #9aa59e; --border: #2c3530;
+    --accent: #7fc48f; --up: #f87171; --down: #4ade80; --best-bg: #173323; --best-text: #9ae6b4;
+    --stale: #66706a; --row-hover: #212923;
+    --s0: #60a5fa; --s1: #fb923c; --s2: #2dd4bf; --s3: #a78bfa;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .filters input[type=search], .filters select {
+    font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; }
+  .filters input[type=search] { flex: 1 1 220px; min-width: 0; }
+  .filters label { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .card h2 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+  .big { font-size: 22px; font-weight: 650; }
+  .card .meta { color: var(--muted); font-size: 12.5px; }
+  .card .stats { display: flex; gap: 14px; margin-top: 8px; font-size: 13px; flex-wrap: wrap; }
+  .up { color: var(--up); } .down { color: var(--down); } .flat { color: var(--muted); }
+  .tablebox { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted);
+       cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; background: var(--surface); }
+  th.num, td.num { text-align: right; }
+  th .arrow { opacity: .6; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--row-hover); }
+  .genus { color: var(--muted); font-size: 12px; }
+  .price { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .price .chg { font-size: 12px; margin-left: 4px; }
+  .best { background: var(--best-bg); color: var(--best-text); font-weight: 650; border-radius: 6px; padding: 2px 6px; }
+  .stale { color: var(--stale); }
+  .na { color: var(--stale); font-style: italic; }
+  .count { color: var(--muted); margin: 0 0 8px; font-size: 13px; }
+  dialog { border: 1px solid var(--border); border-radius: 14px; padding: 0; width: min(860px, calc(100vw - 32px));
+           background: var(--surface); color: var(--text); }
+  dialog::backdrop { background: rgba(0,0,0,.45); }
+  .dlg-head { display: flex; justify-content: space-between; align-items: start; padding: 16px 18px 0; gap: 12px; }
+  .dlg-head h3 { margin: 0; font-size: 18px; }
+  .dlg-body { padding: 12px 18px 18px; }
+  .close { font: inherit; background: none; border: 1px solid var(--border); color: var(--text);
+           border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+  .chartbox { position: relative; height: 300px; margin-bottom: 14px; }
+  .raw { font-size: 13px; max-height: 260px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
+  .raw th { cursor: default; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
+  .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+  .err { background: var(--surface); border: 1px solid var(--up); border-radius: 12px; padding: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tissue culture plant prices</h1>
+  <p class="sub" id="sub">Loading prices.csv…</p>
+
+  <div class="filters">
+    <input type="search" id="q" placeholder="Search plant (e.g. simpo albo)">
+    <select id="genus"><option value="">All genera</option></select>
+    <select id="seller"><option value="">All sellers</option></select>
+    <label><input type="checkbox" id="multi"> Sold by 2+ sellers now</label>
+    <label><input type="checkbox" id="current"> Available now only</label>
+  </div>
+
+  <div class="cards" id="cards"></div>
+  <div class="legend" id="legend"></div>
+  <p class="count" id="count"></p>
+  <div class="tablebox"><table>
+    <thead id="thead"></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+  <p class="note">Prices are per plant. "Current" means the price on the seller's most recent list. Grey prices come from an older list (the plant isn't on that seller's latest list) and are not counted as cheapest. The % next to a price is the change since that seller's previous price for the plant. Click a row for the full history.</p>
+</div>
+
+<dialog id="dlg">
+  <div class="dlg-head">
+    <div><div class="genus" id="dGenus"></div><h3 id="dTitle"></h3></div>
+    <button class="close" id="dClose">Close</button>
+  </div>
+  <div class="dlg-body">
+    <div class="chartbox"><canvas id="chart"></canvas></div>
+    <div class="raw"><table><thead><tr><th>Date</th><th>Seller</th><th>Package</th><th class="num">Price/Bag</th><th class="num">Price/Plant</th></tr></thead><tbody id="dRows"></tbody></table></div>
+  </div>
+</dialog>
+
+<script>
+// ---------- parsing ----------
+function parseCSV(text) {
+  const rows = []; let row = [], field = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else q = false; }
+      else field += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(field); field = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); field = ''; if (row.length > 1 || row[0] !== '') rows.push(row); row = [];
+    } else field += c;
+  }
+  if (field !== '' || row.length) { row.push(field); rows.push(row); }
+  const head = rows.shift().map(h => h.replace(/^﻿/, '').trim());
+  return rows.map(r => Object.fromEntries(head.map((h, i) => [h, (r[i] ?? '').trim()])));
+}
+const money = s => { const n = parseFloat(String(s).replace(/[^\d.,]/g, '').replace(/,/g, '')); return isFinite(n) ? n : null; };
+const packSize = s => { const m = /^(\d+)/.exec(s || ''); return m ? +m[1] : null; };
+const parseDate = s => { const [d, m, y] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+const fmtDate = t => { const d = new Date(t); return `${String(d.getUTCDate()).padStart(2, '0')}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${d.getUTCFullYear()}`; };
+const fmtShort = t => { const d = new Date(t); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }); };
+const eur = n => '€' + (n % 1 ? n.toFixed(2) : n.toFixed(0));
+const pct = x => (x > 0 ? '▲' : x < 0 ? '▼' : '=') + (x ? Math.abs(x * 100).toFixed(Math.abs(x) < 0.1 ? 1 : 0) + '%' : '');
+const cls = x => x > 0.0005 ? 'up' : x < -0.0005 ? 'down' : 'flat';
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+
+// ---------- model ----------
+let SELLERS = [], SELLER_DATES = {}, LATEST = {}, PLANTS = [], ALL_DATES = [], FIRST = 0, LAST_ALL = 0;
+const DAY = 864e5;
+function build(records) {
+  const plants = new Map(), sdates = {};
+  for (const r of records) {
+    if (!r.Date || !r.Supplier) continue;
+    const t = parseDate(r.Date), s = r.Supplier, key = r.Genus + '|' + r.Variety;
+    (sdates[s] ??= new Set()).add(t);
+    let p = plants.get(key);
+    if (!p) plants.set(key, p = { genus: r.Genus, variety: r.Variety, by: {}, rows: [] });
+    let price = money(r['Price/Plant']);
+    if (price == null) { const bag = money(r['Price/Bag']), n = packSize(r.Package); if (bag != null && n) price = bag / n; }
+    p.rows.push({ t, s, pack: r.Package, bag: r['Price/Bag'], per: price });
+    const obs = ((p.by[s] ??= new Map()).get(t)) || { t, price: null };
+    if (price != null && (obs.price == null || price < obs.price)) obs.price = price;
+    p.by[s].set(t, obs);
+  }
+  SELLERS = Object.keys(sdates).sort();
+  for (const s of SELLERS) { SELLER_DATES[s] = [...sdates[s]].sort((a, b) => a - b); LATEST[s] = SELLER_DATES[s].at(-1); }
+  ALL_DATES = [...new Set(SELLERS.flatMap(s => SELLER_DATES[s]))].sort((a, b) => a - b);
+  FIRST = ALL_DATES[0]; LAST_ALL = ALL_DATES.at(-1);
+  PLANTS = [...plants.values()].map(p => {
+    p.name = p.genus + ' ' + p.variety;
+    p.cur = {};
+    for (const s of Object.keys(p.by)) {
+      const series = [...p.by[s].values()].filter(o => o.price != null).sort((a, b) => a.t - b.t);
+      const onLatest = p.by[s].get(LATEST[s]);
+      const last = series.at(-1), prev = series.at(-2);
+      p.cur[s] = {
+        series,
+        price: last?.price ?? null,
+        date: last?.t ?? null,
+        current: !!last && last.t === LATEST[s],
+        unavailable: !!onLatest && onLatest.price == null,
+        change: last && prev ? (last.price - prev.price) / prev.price : null,
+        prevDate: prev?.t ?? null,
+      };
+    }
+    const now = SELLERS.filter(s => p.cur[s]?.current).map(s => p.cur[s].price);
+    p.nCurrent = now.length;
+    p.best = now.length ? Math.min(...now) : null;
+    p.spread = now.length > 1 ? Math.max(...now) / p.best - 1 : null;
+    p.search = p.name.toLowerCase();
+    return p;
+  });
+}
+
+// ---------- UI state ----------
+const state = { q: '', genus: '', seller: '', multi: false, current: false, sort: 'name', dir: 1 };
+const $ = id => document.getElementById(id);
+const sellerColor = s => `var(--s${SELLERS.indexOf(s) % 4})`;
+const sellerHex = s => getComputedStyle(document.documentElement).getPropertyValue(`--s${SELLERS.indexOf(s) % 4}`).trim();
+
+function filtered(ignoreSeller = false) {
+  const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  return PLANTS.filter(p =>
+    (!state.genus || p.genus === state.genus) &&
+    (ignoreSeller || !state.seller || p.cur[state.seller]) &&
+    (!state.multi || p.nCurrent >= 2) &&
+    (!state.current || p.nCurrent >= 1) &&
+    words.every(w => p.search.includes(w)));
+}
+
+function renderCards() {
+  const set = filtered(true);
+  $('cards').innerHTML = SELLERS.map(s => {
+    const dates = SELLER_DATES[s], last = dates.at(-1), prev = dates.at(-2);
+    const changes = [];
+    let up = 0, down = 0, same = 0, cheapest = 0, compared = 0, carried = 0;
+    for (const p of set) {
+      const m = p.by[s]; if (!m) continue;
+      const a = m.get(prev)?.price, b = m.get(last)?.price;
+      if (a != null && b != null) {
+        const c = (b - a) / a; changes.push(c);
+        if (c > 0.0005) up++; else if (c < -0.0005) down++; else same++;
+      }
+      if (p.cur[s]?.current) {
+        carried++;
+        if (p.nCurrent >= 2) { compared++; if (p.cur[s].price === p.best) cheapest++; }
+      }
+    }
+    const med = median(changes);
+    const trend = med == null ? '<span class="flat">—</span>' : `<span class="${cls(med)}">${Math.abs(med) < 0.0005 ? '= 0%' : pct(med)}</span>`;
+    return `<div class="card">
+      <h2><span class="dot" style="background:${sellerColor(s)}"></span>${esc(s)}</h2>
+      <div class="big">${trend}</div>
+      <div class="meta">median price change ${prev ? `${fmtShort(prev)} → ${fmtShort(last)}` : '(only one list)'}${changes.length ? `, ${changes.length} plants on both lists` : ''}</div>
+      <div class="stats">
+        <span class="up">▲ ${up}</span><span class="down">▼ ${down}</span><span class="flat">= ${same}</span>
+      </div>
+      <div class="stats"><span>Cheapest on <b>${compared ? Math.round(cheapest / compared * 100) : 0}%</b> of ${compared} shared plants</span></div>
+      <div class="meta" style="margin-top:6px">${carried} plants on latest list (${fmtDate(last)})</div>
+    </div>`;
+  }).join('');
+}
+
+function sparkline(p) {
+  const all = SELLERS.flatMap(s => p.cur[s]?.series ?? []);
+  if (all.length < 2) return '';
+  const t0 = Math.min(...all.map(o => o.t)), t1 = Math.max(...all.map(o => o.t));
+  const v0 = Math.min(...all.map(o => o.price)), v1 = Math.max(...all.map(o => o.price));
+  const W = 90, H = 26, x = t => t1 === t0 ? W / 2 : 2 + (t - t0) / (t1 - t0) * (W - 4), y = v => v1 === v0 ? H / 2 : H - 3 - (v - v0) / (v1 - v0) * (H - 6);
+  const paths = SELLERS.map(s => {
+    const ser = p.cur[s]?.series; if (!ser?.length) return '';
+    const pts = ser.map(o => `${x(o.t).toFixed(1)},${y(o.price).toFixed(1)}`);
+    return ser.length === 1
+      ? `<circle cx="${pts[0].split(',')[0]}" cy="${pts[0].split(',')[1]}" r="2" fill="${sellerColor(s)}"/>`
+      : `<polyline points="${pts.join(' ')}" fill="none" stroke="${sellerColor(s)}" stroke-width="1.6" stroke-linejoin="round"/>`;
+  }).join('');
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${paths}</svg>`;
+}
+
+function sortVal(p, key) {
+  if (key === 'name') return p.name.toLowerCase();
+  if (key === 'best') return p.best;
+  if (key === 'spread') return p.spread;
+  if (key.startsWith('s:')) { const c = p.cur[key.slice(2)]; return c?.price ?? null; }
+  if (key.startsWith('c:')) { const c = p.cur[key.slice(2)]; return c?.change ?? null; }
+}
+
+function renderTable() {
+  const cols = [['name', 'Plant'], ...SELLERS.map(s => ['s:' + s, s]), ['best', 'Cheapest now'], ['spread', 'Spread'], [null, 'History']];
+  $('thead').innerHTML = '<tr>' + cols.map(([k, label]) => {
+    const arrow = k && state.sort === k ? `<span class="arrow">${state.dir > 0 ? ' ▲' : ' ▼'}</span>` : '';
+    const dot = k?.startsWith('s:') ? `<span class="dot" style="background:${sellerColor(label)};margin-right:6px"></span>` : '';
+    return `<th class="${k && k !== 'name' ? 'num' : ''}" ${k ? `data-k="${esc(k)}"` : ''}>${dot}${esc(label)}${arrow}</th>`;
+  }).join('') + '</tr>';
+
+  const rows = filtered();
+  const k = state.sort;
+  rows.sort((a, b) => {
+    const va = sortVal(a, k), vb = sortVal(b, k);
+    if (va == null && vb == null) return a.name.localeCompare(b.name);
+    if (va == null) return 1; if (vb == null) return -1;
+    return (va < vb ? -1 : va > vb ? 1 : 0) * state.dir || a.name.localeCompare(b.name);
+  });
+  $('count').textContent = `${rows.length} plants`;
+  $('tbody').innerHTML = rows.map((p, i) => {
+    const cells = SELLERS.map(s => {
+      const c = p.cur[s];
+      if (!c) return '<td class="num"></td>';
+      if (c.price == null) return '<td class="num"><span class="na">not available</span></td>';
+      const chg = c.change != null ? `<span class="chg ${cls(c.change)}" title="vs ${fmtDate(c.prevDate)}">${pct(c.change)}</span>` : '';
+      if (!c.current) {
+        const why = c.unavailable ? 'Marked not available on latest list' : 'Not on latest list';
+        return `<td class="num"><span class="price stale" title="${why}; last price ${fmtDate(c.date)}">${eur(c.price)}</span></td>`;
+      }
+      const best = p.nCurrent >= 2 && c.price === p.best;
+      return `<td class="num"><span class="price"><span class="${best ? 'best' : ''}">${eur(c.price)}</span>${chg}</span></td>`;
+    }).join('');
+    const bestSellers = SELLERS.filter(s => p.cur[s]?.current && p.cur[s].price === p.best);
+    const bestCell = p.best == null ? '' : `${eur(p.best)} <span class="genus">${esc(bestSellers.join(', '))}</span>`;
+    return `<tr data-i="${PLANTS.indexOf(p)}"><td><div class="genus">${esc(p.genus)}</div>${esc(p.variety)}</td>${cells}
+      <td class="num price">${bestCell}</td>
+      <td class="num">${p.spread != null ? `<span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</td>
+      <td>${sparkline(p)}</td></tr>`;
+  }).join('');
+}
+
+function render() { renderCards(); renderTable(); }
+
+// ---------- detail dialog ----------
+let chart;
+function monthTicks() {
+  const out = [], d = new Date(FIRST);
+  let y = d.getUTCFullYear(), m = d.getUTCMonth();
+  for (let t = Date.UTC(y, m, 1); t <= LAST_ALL + 5 * DAY; t = Date.UTC(y, ++m, 1)) if (t >= FIRST - 5 * DAY) out.push(t);
+  return out;
+}
+function openDetail(p) {
+  $('dGenus').textContent = p.genus;
+  $('dTitle').textContent = p.variety;
+  $('dRows').innerHTML = [...p.rows].sort((a, b) => b.t - a.t || a.s.localeCompare(b.s)).map(r =>
+    `<tr><td>${fmtDate(r.t)}</td><td><span class="dot" style="background:${sellerColor(r.s)};margin-right:6px"></span>${esc(r.s)}</td>
+     <td>${esc(r.pack || '—')}</td><td class="num">${esc(r.bag || '—')}</td><td class="num">${r.per != null ? eur(r.per) : '<span class="na">—</span>'}</td></tr>`).join('');
+  const cs = getComputedStyle(document.documentElement);
+  const grid = cs.getPropertyValue('--border').trim(), muted = cs.getPropertyValue('--muted').trim();
+  const datasets = SELLERS.filter(s => p.cur[s]?.series.length).map(s => ({
+    label: s, data: p.cur[s].series.map(o => ({ x: o.t, y: o.price })),
+    borderColor: sellerHex(s), backgroundColor: sellerHex(s), stepped: 'before', pointRadius: 4, pointHoverRadius: 6, borderWidth: 2,
+  }));
+  chart?.destroy();
+  $('dlg').showModal();
+  chart = new Chart($('chart'), {
+    type: 'line', data: { datasets },
+    options: {
+      maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'nearest', intersect: false },
+      plugins: {
+        legend: { labels: { color: muted, usePointStyle: true } },
+        tooltip: { callbacks: { title: it => fmtDate(it[0].parsed.x), label: it => ` ${it.dataset.label}: ${eur(it.parsed.y)}` } },
+      },
+      scales: {
+        x: { type: 'linear', min: FIRST - 5 * DAY, max: LAST_ALL + 5 * DAY, grid: { color: grid },
+             afterBuildTicks: ax => { ax.ticks = monthTicks().map(v => ({ value: v })); },
+             ticks: { color: muted, autoSkip: true, maxRotation: 0,
+                      callback: v => new Date(v).toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' }) } },
+        y: { beginAtZero: true, grid: { color: grid }, ticks: { color: muted, callback: v => '€' + v } },
+      },
+    },
+  });
+}
+
+// ---------- wiring ----------
+function init(text) {
+  build(parseCSV(text));
+  const genera = [...new Set(PLANTS.map(p => p.genus))].sort();
+  $('genus').insertAdjacentHTML('beforeend', genera.map(g => `<option>${esc(g)}</option>`).join(''));
+  $('seller').insertAdjacentHTML('beforeend', SELLERS.map(s => `<option>${esc(s)}</option>`).join(''));
+  $('legend').innerHTML = SELLERS.map(s => `<span><span class="dot" style="background:${sellerColor(s)}"></span> ${esc(s)}</span>`).join('');
+  const lastAll = Math.max(...SELLERS.map(s => LATEST[s]));
+  $('sub').textContent = `${PLANTS.length} plants from ${SELLERS.length} sellers · latest list ${fmtDate(lastAll)}`;
+  $('q').addEventListener('input', e => { state.q = e.target.value; render(); });
+  $('genus').addEventListener('change', e => { state.genus = e.target.value; render(); });
+  $('seller').addEventListener('change', e => { state.seller = e.target.value; renderTable(); });
+  $('multi').addEventListener('change', e => { state.multi = e.target.checked; render(); });
+  $('current').addEventListener('change', e => { state.current = e.target.checked; render(); });
+  $('thead').addEventListener('click', e => {
+    const k = e.target.closest('th')?.dataset.k; if (!k) return;
+    if (state.sort === k) state.dir *= -1; else { state.sort = k; state.dir = k === 'spread' ? -1 : 1; }
+    renderTable();
+  });
+  $('tbody').addEventListener('click', e => { const tr = e.target.closest('tr'); if (tr) openDetail(PLANTS[+tr.dataset.i]); });
+  $('dClose').addEventListener('click', () => $('dlg').close());
+  $('dlg').addEventListener('click', e => { if (e.target === $('dlg')) $('dlg').close(); });
+  render();
+}
+
+fetch('prices.csv', { cache: 'no-cache' })
+  .then(r => { if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.text(); })
+  .then(init)
+  .catch(err => {
+    $('sub').innerHTML = '';
+    document.querySelector('.wrap').insertAdjacentHTML('beforeend',
+      `<div class="err">Could not load <code>prices.csv</code> (${esc(String(err.message || err))}). Serve this folder over HTTP, e.g. <code>pwsh ./serve.ps1</code>, instead of opening the file directly.</div>`);
+  });
+</script>
+</body>
+</html>
