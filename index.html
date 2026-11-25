@@ -65,6 +65,7 @@
   thead tr:first-child th:last-child { border-top-right-radius: 12px; }
   th.sc, td.sc { border-left: 1px solid var(--border); min-width: 104px; }
   th.sc { border-top: 3px solid var(--sc); }
+  th[data-k="best"], td.bestcol { border-left: 1px solid var(--border); } /* closes off the last seller column */
   td.sc .chg { display: block; font-size: 11.5px; margin: 1px 0 0; }
   th.num, td.num { text-align: right; }
   th .arrow { opacity: .6; }
@@ -327,7 +328,7 @@ function renderTable() {
     const bestSellers = SELLERS.filter(s => p.cur[s]?.current && p.cur[s].price === p.best);
     const bestCell = p.best == null ? '' : `${eur(p.best)} <span class="genus">${esc(bestSellers.join(', '))}</span>`;
     return `<tr data-i="${PLANTS.indexOf(p)}"><td><div class="genus">${esc(p.genus)}</div>${esc(p.variety)}</td>${cells}
-      <td class="num price">${bestCell}</td>
+      <td class="num price bestcol">${bestCell}</td>
       <td class="num">${p.spread != null ? `<span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</td>
       <td>${sparkline(p)}</td></tr>`;
   }).join('');
