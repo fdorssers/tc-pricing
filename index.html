@@ -93,7 +93,6 @@
   .chartbox { position: relative; height: 300px; margin-bottom: 14px; }
   .raw { font-size: 13px; max-height: 260px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
   .raw th { cursor: default; }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
   .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
   .err { background: var(--surface); border: 1px solid var(--up); border-radius: 12px; padding: 16px; }
 </style>
@@ -112,7 +111,6 @@
   </div>
 
   <div class="cards" id="cards"></div>
-  <div class="legend" id="legend"></div>
   <p class="count" id="count"></p>
   <div class="tablebox"><table>
     <thead id="thead"></thead>
@@ -200,7 +198,8 @@ function build(records) {
   for (const s of SELLERS) { SELLER_DATES[s] = [...sdates[s]].sort((a, b) => a - b); LATEST[s] = SELLER_DATES[s].at(-1); }
   ALL_DATES = [...new Set(SELLERS.flatMap(s => SELLER_DATES[s]))].sort((a, b) => a - b);
   FIRST = ALL_DATES[0]; LAST_ALL = ALL_DATES.at(-1);
-  PLANTS = [...plants.values()].map(p => {
+  PLANTS = [...plants.values()].map((p, idx) => {
+    p.idx = idx;
     p.name = p.genus + ' ' + p.variety;
     p.cur = {};
     for (const s of Object.keys(p.by)) {
@@ -347,7 +346,7 @@ function renderTable() {
     const bestSellers = SELLERS.filter(s => isBest(p, p.cur[s]));
     const bestBag = p.hasSingle ? '' : bagNote(p.cur[bestSellers[0]] ?? {});
     const bestCell = p.best == null ? '' : `${eur(p.best)} <span class="genus">${esc(bestSellers.join(', '))}</span>${bestBag ? `<span class="chg flat" style="display:block;font-size:11.5px">${bestBag}</span>` : ''}`;
-    return `<tr data-i="${PLANTS.indexOf(p)}"><td><button class="plant" title="Show price history"><span class="genus">${esc(p.genus)}</span> ${esc(p.variety)}</button></td>${cells}
+    return `<tr data-i="${p.idx}"><td><button class="plant" title="Show price history"><span class="genus">${esc(p.genus)}</span> ${esc(p.variety)}</button></td>${cells}
       <td class="num price bestcol">${bestCell}</td>
       <td class="num">${p.spread != null ? `<span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</td>
       <td>${sparkline(p)}</td></tr>`;
@@ -404,7 +403,6 @@ function init(text) {
   const genera = [...new Set(PLANTS.map(p => p.genus))].sort();
   $('genus').insertAdjacentHTML('beforeend', genera.map(g => `<option>${esc(g)}</option>`).join(''));
   $('seller').insertAdjacentHTML('beforeend', SELLERS.map(s => `<option>${esc(s)}</option>`).join(''));
-  $('legend').innerHTML = SELLERS.map(s => `<span><span class="dot" style="background:${sellerColor(s)}"></span> ${esc(s)}</span>`).join('');
   const lastAll = Math.max(...SELLERS.map(s => LATEST[s]));
   $('sub').textContent = `${PLANTS.length} plants from ${SELLERS.length} sellers · latest list ${fmtDate(lastAll)}`;
   $('q').addEventListener('input', e => { state.q = e.target.value; render(); });

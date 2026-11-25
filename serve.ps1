@@ -2,7 +2,8 @@
 # Usage: pwsh ./serve.ps1 [-Port 8765]   then open http://localhost:8765/
 param([int]$Port = 8765)
 
-$root = $PSScriptRoot
+# Trailing separator so a sibling folder like "tc-pricing-old" doesn't pass the "inside root" check.
+$root = $PSScriptRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
 $types = @{ '.html' = 'text/html; charset=utf-8'; '.csv' = 'text/csv; charset=utf-8'; '.js' = 'text/javascript'; '.css' = 'text/css'; '.json' = 'application/json' }
 # Use the requested port, or the next free one if it's taken (e.g. by another running copy).
 $listener = $null
