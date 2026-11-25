@@ -4,9 +4,16 @@ param([int]$Port = 8765)
 
 $root = $PSScriptRoot
 $types = @{ '.html' = 'text/html; charset=utf-8'; '.csv' = 'text/csv; charset=utf-8'; '.js' = 'text/javascript'; '.css' = 'text/css'; '.json' = 'application/json' }
-$listener = [Net.HttpListener]::new()
-$listener.Prefixes.Add("http://localhost:$Port/")
-$listener.Start()
+# Use the requested port, or the next free one if it's taken (e.g. by another running copy).
+$listener = $null
+foreach ($p in $Port..($Port + 9)) {
+    $candidate = [Net.HttpListener]::new()
+    $candidate.Prefixes.Add("http://localhost:$p/")
+    try { $candidate.Start(); $listener = $candidate; break }
+    catch { $candidate.Close(); Write-Host "Port $p is in use, trying $($p + 1)..." }
+}
+if (-not $listener) { Write-Error "No free port between $Port and $($Port + 9). Pass another one with -Port."; exit 1 }
+$Port = [int]($listener.Prefixes | Select-Object -First 1).Split(':')[2].TrimEnd('/')
 Write-Host "Serving $root at http://localhost:$Port/ (Ctrl+C to stop)"
 try {
     while ($listener.IsListening) {
