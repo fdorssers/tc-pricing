@@ -104,7 +104,7 @@
     <select id="genus"><option value="">All genera</option></select>
     <select id="seller"><option value="">All sellers</option></select>
     <label><input type="checkbox" id="multi"> Sold by 2+ sellers now</label>
-    <label><input type="checkbox" id="current"> Available now only</label>
+    <label><input type="checkbox" id="current" checked> Available now only</label>
   </div>
 
   <div class="cards" id="cards"></div>
@@ -114,7 +114,7 @@
     <thead id="thead"></thead>
     <tbody id="tbody"></tbody>
   </table></div>
-  <p class="note">Prices are per plant. "Current" means the price on the seller's most recent list. Grey prices come from an older list (the plant isn't on that seller's latest list) and are not counted as cheapest. The % next to a price is the change since that seller's previous price for the plant. Click a row for the full history.</p>
+  <p class="note">Prices are per plant. "Current" means the price on the seller's most recent list. Grey prices come from an older list (the plant isn't on that seller's latest list) and are not counted as cheapest. Bag prices ("bag of 5") are shown per plant and only count as cheapest when no seller offers a single plant. The % next to a price is the change since that seller's previous price for the plant. Click a row for the full history.</p>
 </div>
 
 <dialog id="dlg">
@@ -181,8 +181,15 @@ function build(records) {
     let price = money(r['Price/Plant']);
     if (price == null) { const bag = money(r['Price/Bag']), n = packSize(r.Package); if (bag != null && n) price = bag / n; }
     p.rows.push({ t, s, pack: r.Package, bag: r['Price/Bag'], per: price });
-    const obs = ((p.by[s] ??= new Map()).get(t)) || { t, price: null };
-    if (price != null && (obs.price == null || price < obs.price)) obs.price = price;
+    const size = packSize(r.Package) || 1;
+    const obs = ((p.by[s] ??= new Map()).get(t)) || { t, price: null, size: null };
+    // Per date: prefer a single-plant price; only fall back to the cheapest per-plant bag price.
+    if (price != null) {
+      const better = obs.price == null
+        || (size === 1 && obs.size !== 1)
+        || ((size === 1) === (obs.size === 1) && price < obs.price);
+      if (better) { obs.price = price; obs.size = size; }
+    }
     p.by[s].set(t, obs);
   }
   SELLERS = Object.keys(sdates).sort();
@@ -199,6 +206,7 @@ function build(records) {
       p.cur[s] = {
         series,
         price: last?.price ?? null,
+        size: last?.size ?? null,
         date: last?.t ?? null,
         current: !!last && last.t === LATEST[s],
         unavailable: !!onLatest && onLatest.price == null,
@@ -206,18 +214,23 @@ function build(records) {
         prevDate: prev?.t ?? null,
       };
     }
-    const now = SELLERS.filter(s => p.cur[s]?.current).map(s => p.cur[s].price);
+    // Cheapest and spread compare single plants with single plants; bag prices only when nobody sells singles.
+    const now = SELLERS.filter(s => p.cur[s]?.current).map(s => p.cur[s]);
     p.nCurrent = now.length;
-    p.best = now.length ? Math.min(...now) : null;
-    p.spread = now.length > 1 ? Math.max(...now) / p.best - 1 : null;
+    p.hasSingle = now.some(c => c.size === 1);
+    const pool = now.filter(c => !p.hasSingle || c.size === 1).map(c => c.price);
+    p.best = pool.length ? Math.min(...pool) : null;
+    p.spread = pool.length > 1 ? Math.max(...pool) / p.best - 1 : null;
     p.search = p.name.toLowerCase();
     return p;
   });
 }
 
 // ---------- UI state ----------
-const state = { q: '', genus: '', seller: '', multi: false, current: false, sort: 'name', dir: 1 };
+const state = { q: '', genus: '', seller: '', multi: false, current: true, sort: 'name', dir: 1 };
 const $ = id => document.getElementById(id);
+const isBest = (p, c) => !!c?.current && c.price === p.best && (!p.hasSingle || c.size === 1);
+const bagNote = c => c.size > 1 ? `bag of ${c.size} · ${eur(c.price * c.size)}` : '';
 const sellerColor = s => `var(--s${SELLERS.indexOf(s) % 4})`;
 const sellerHex = s => getComputedStyle(document.documentElement).getPropertyValue(`--s${SELLERS.indexOf(s) % 4}`).trim();
 
@@ -246,7 +259,7 @@ function renderCards() {
       }
       if (p.cur[s]?.current) {
         carried++;
-        if (p.nCurrent >= 2) { compared++; if (p.cur[s].price === p.best) cheapest++; }
+        if (p.nCurrent >= 2) { compared++; if (isBest(p, p.cur[s])) cheapest++; }
       }
     }
     // Basket change: what the same plants cost in total on the latest list vs the previous one.
@@ -288,7 +301,7 @@ function sortVal(p, key) {
   if (key === 'name') return p.name.toLowerCase();
   if (key === 'best') return p.best;
   if (key === 'spread') return p.spread;
-  if (key.startsWith('s:')) { const c = p.cur[key.slice(2)]; return c?.price ?? null; }
+  if (key.startsWith('s:')) { const c = p.cur[key.slice(2)]; return c?.current ? c.price : null; } // old prices sort last
   if (key.startsWith('c:')) { const c = p.cur[key.slice(2)]; return c?.change ?? null; }
 }
 
@@ -322,11 +335,13 @@ function renderTable() {
         const why = c.unavailable ? 'Marked not available on latest list' : 'Not on latest list';
         return `<td class="num sc" title="${why}"><span class="price stale">${eur(c.price)}</span><span class="chg stale">${c.unavailable ? 'not available' : 'last ' + fmtShort(c.date)}</span></td>`;
       }
-      const best = p.nCurrent >= 2 && c.price === p.best;
-      return `<td class="num sc"><span class="price"><span class="${best ? 'best' : ''}">${eur(c.price)}</span></span>${chg}</td>`;
+      const best = p.nCurrent >= 2 && isBest(p, c);
+      const bag = c.size > 1 ? `<span class="chg flat">${bagNote(c)}</span>` : '';
+      return `<td class="num sc"><span class="price"><span class="${best ? 'best' : ''}">${eur(c.price)}</span></span>${bag}${chg}</td>`;
     }).join('');
-    const bestSellers = SELLERS.filter(s => p.cur[s]?.current && p.cur[s].price === p.best);
-    const bestCell = p.best == null ? '' : `${eur(p.best)} <span class="genus">${esc(bestSellers.join(', '))}</span>`;
+    const bestSellers = SELLERS.filter(s => isBest(p, p.cur[s]));
+    const bestBag = p.hasSingle ? '' : bagNote(p.cur[bestSellers[0]] ?? {});
+    const bestCell = p.best == null ? '' : `${eur(p.best)} <span class="genus">${esc(bestSellers.join(', '))}</span>${bestBag ? `<span class="chg flat" style="display:block;font-size:11.5px">${bestBag}</span>` : ''}`;
     return `<tr data-i="${PLANTS.indexOf(p)}"><td><div class="genus">${esc(p.genus)}</div>${esc(p.variety)}</td>${cells}
       <td class="num price bestcol">${bestCell}</td>
       <td class="num">${p.spread != null ? `<span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</td>
