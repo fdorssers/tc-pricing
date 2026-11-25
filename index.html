@@ -147,7 +147,15 @@ function parseCSV(text) {
   const head = rows.shift().map(h => h.replace(/^﻿/, '').trim());
   return rows.map(r => Object.fromEntries(head.map((h, i) => [h, (r[i] ?? '').trim()])));
 }
-const money = s => { const n = parseFloat(String(s).replace(/[^\d.,]/g, '').replace(/,/g, '')); return isFinite(n) ? n : null; };
+// Handles "€ 110.00", "€ 1,030.00", "€ 1.030.00" and "€ 1.030,00": a trailing separator with
+// 1–2 digits is the decimal point, every other separator is a thousands separator.
+const money = s => {
+  const t = String(s).replace(/[^\d.,]/g, '');
+  if (!/\d/.test(t)) return null;
+  const m = /^(.*?)[.,](\d{1,2})$/.exec(t);
+  const n = m ? Number(m[1].replace(/[.,]/g, '') + '.' + m[2]) : Number(t.replace(/[.,]/g, ''));
+  return isFinite(n) ? n : null;
+};
 const packSize = s => { const m = /^(\d+)/.exec(s || ''); return m ? +m[1] : null; };
 const parseDate = s => { const [d, m, y] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
 const fmtDate = t => { const d = new Date(t); return `${String(d.getUTCDate()).padStart(2, '0')}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${d.getUTCFullYear()}`; };
@@ -227,12 +235,12 @@ function renderCards() {
   $('cards').innerHTML = SELLERS.map(s => {
     const dates = SELLER_DATES[s], last = dates.at(-1), prev = dates.at(-2);
     const changes = [];
-    let up = 0, down = 0, same = 0, cheapest = 0, compared = 0, carried = 0;
+    let up = 0, down = 0, same = 0, cheapest = 0, compared = 0, carried = 0, sumPrev = 0, sumLast = 0;
     for (const p of set) {
       const m = p.by[s]; if (!m) continue;
       const a = m.get(prev)?.price, b = m.get(last)?.price;
       if (a != null && b != null) {
-        const c = (b - a) / a; changes.push(c);
+        const c = (b - a) / a; changes.push(c); sumPrev += a; sumLast += b;
         if (c > 0.0005) up++; else if (c < -0.0005) down++; else same++;
       }
       if (p.cur[s]?.current) {
@@ -240,12 +248,16 @@ function renderCards() {
         if (p.nCurrent >= 2) { compared++; if (p.cur[s].price === p.best) cheapest++; }
       }
     }
-    const med = median(changes);
-    const trend = med == null ? '<span class="flat">—</span>' : `<span class="${cls(med)}">${Math.abs(med) < 0.0005 ? '= 0%' : pct(med)}</span>`;
+    // Basket change: what the same plants cost in total on the latest list vs the previous one.
+    const basket = sumPrev ? sumLast / sumPrev - 1 : null;
+    const trend = basket == null ? '<span class="flat">—</span>' : `<span class="${cls(basket)}">${Math.abs(basket) < 0.0005 ? '= 0%' : pct(basket)}</span>`;
+    const eur0 = n => '€' + Math.round(n).toLocaleString('en-GB');
     return `<div class="card">
       <h2><span class="dot" style="background:${sellerColor(s)}"></span>${esc(s)}</h2>
       <div class="big">${trend}</div>
-      <div class="meta">median price change ${prev ? `${fmtShort(prev)} → ${fmtShort(last)}` : '(only one list)'}${changes.length ? `, ${changes.length} plants on both lists` : ''}</div>
+      <div class="meta">${!prev ? 'only one price list so far'
+        : changes.length ? `the same ${changes.length} plants cost ${eur0(sumPrev)} on ${fmtShort(prev)} and ${eur0(sumLast)} on ${fmtShort(last)}`
+        : `no plants on both the ${fmtShort(prev)} and ${fmtShort(last)} lists`}</div>
       <div class="stats">
         <span class="up">▲ ${up}</span><span class="down">▼ ${down}</span><span class="flat">= ${same}</span>
       </div>
