@@ -230,7 +230,33 @@ function build(records) {
 }
 
 // ---------- UI state ----------
-const state = { q: '', genus: '', seller: '', multi: false, current: true, sort: 'name', dir: 1 };
+const DEFAULTS = { q: '', genus: '', seller: '', multi: false, current: true, sort: 'name', dir: 1 };
+const state = { ...DEFAULTS };
+
+// Filters and sort live in the URL hash (e.g. #genus=Monstera&sort=spread&dir=-1) so a view can be shared.
+// Only values that differ from DEFAULTS are written; replaceState keeps the back button clean.
+function readHash() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  for (const [k, d] of Object.entries(DEFAULTS)) {
+    const v = h.get(k);
+    state[k] = v == null ? d
+      : typeof d === 'boolean' ? (v === '1' ? true : v === '0' ? false : d)
+      : typeof d === 'number' ? (v === '-1' ? -1 : 1) : v;
+  }
+  if (!['name', 'best', 'spread', ...SELLERS.map(s => 's:' + s)].includes(state.sort)) { state.sort = 'name'; state.dir = 1; }
+  if (![...$('genus').options].some(o => o.value === state.genus)) state.genus = '';
+  if (![...$('seller').options].some(o => o.value === state.seller)) state.seller = '';
+  $('q').value = state.q; $('genus').value = state.genus; $('seller').value = state.seller;
+  $('multi').checked = state.multi; $('current').checked = state.current;
+}
+function writeHash() {
+  const h = new URLSearchParams();
+  for (const [k, d] of Object.entries(DEFAULTS)) {
+    if (state[k] !== d) h.set(k, typeof d === 'boolean' ? (state[k] ? '1' : '0') : String(state[k]));
+  }
+  const s = h.toString();
+  if (s !== location.hash.slice(1)) history.replaceState(null, '', s ? '#' + s : location.pathname + location.search);
+}
 const $ = id => document.getElementById(id);
 const isBest = (p, c) => !!c?.current && c.price === p.best && (!p.hasSingle || c.size === 1);
 const bagNote = c => c.size > 1 ? `bag of ${c.size} · ${eur(c.price * c.size)}` : '';
@@ -327,6 +353,7 @@ function renderTable() {
     return (va < vb ? -1 : va > vb ? 1 : 0) * state.dir || a.name.localeCompare(b.name);
   });
   $('count').textContent = `${rows.length} plants`;
+  writeHash();
   $('tbody').innerHTML = rows.map((p, i) => {
     const cells = SELLERS.map(s => {
       const c = p.cur[s];
@@ -405,6 +432,8 @@ function init(text) {
   $('seller').insertAdjacentHTML('beforeend', SELLERS.map(s => `<option>${esc(s)}</option>`).join(''));
   const lastAll = Math.max(...SELLERS.map(s => LATEST[s]));
   $('sub').textContent = `${PLANTS.length} plants from ${SELLERS.length} sellers · latest list ${fmtDate(lastAll)}`;
+  readHash();
+  window.addEventListener('hashchange', () => { readHash(); render(); });
   $('q').addEventListener('input', e => { state.q = e.target.value; render(); });
   $('genus').addEventListener('change', e => { state.genus = e.target.value; render(); });
   $('seller').addEventListener('change', e => { state.seller = e.target.value; renderTable(); });
