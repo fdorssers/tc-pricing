@@ -72,6 +72,10 @@
   tbody tr { cursor: pointer; }
   tbody tr:hover { background: var(--row-hover); }
   .genus { color: var(--muted); font-size: 12px; }
+  td .genus { font-size: inherit; }
+  /* The plant name is a button so rows can be opened with the keyboard (Tab, then Enter). */
+  .plant { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  .plant:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
   .price { white-space: nowrap; font-variant-numeric: tabular-nums; }
   .price .chg { font-size: 12px; margin-left: 4px; }
   .best { background: var(--best-bg); color: var(--best-text); font-weight: 650; border-radius: 6px; padding: 2px 6px; }
@@ -268,10 +272,11 @@ function renderCards() {
     const eur0 = n => '€' + Math.round(n).toLocaleString('en-GB');
     return `<div class="card">
       <h2><span class="dot" style="background:${sellerColor(s)}"></span>${esc(s)}</h2>
+      <div class="meta">${prev ? `Price change ${fmtShort(prev)} → ${fmtShort(last)}` : 'Price change'}</div>
       <div class="big">${trend}</div>
       <div class="meta">${!prev ? 'only one price list so far'
-        : changes.length ? `the same ${changes.length} plants cost ${eur0(sumPrev)} on ${fmtShort(prev)} and ${eur0(sumLast)} on ${fmtShort(last)}`
-        : `no plants on both the ${fmtShort(prev)} and ${fmtShort(last)} lists`}</div>
+        : changes.length ? `${eur0(sumPrev)} → ${eur0(sumLast)} for the same ${changes.length} plants`
+        : 'no plants on both lists'}</div>
       <div class="stats">
         <span class="up">▲ ${up}</span><span class="down">▼ ${down}</span><span class="flat">= ${same}</span>
       </div>
@@ -342,7 +347,7 @@ function renderTable() {
     const bestSellers = SELLERS.filter(s => isBest(p, p.cur[s]));
     const bestBag = p.hasSingle ? '' : bagNote(p.cur[bestSellers[0]] ?? {});
     const bestCell = p.best == null ? '' : `${eur(p.best)} <span class="genus">${esc(bestSellers.join(', '))}</span>${bestBag ? `<span class="chg flat" style="display:block;font-size:11.5px">${bestBag}</span>` : ''}`;
-    return `<tr data-i="${PLANTS.indexOf(p)}"><td><div class="genus">${esc(p.genus)}</div>${esc(p.variety)}</td>${cells}
+    return `<tr data-i="${PLANTS.indexOf(p)}"><td><button class="plant" title="Show price history"><span class="genus">${esc(p.genus)}</span> ${esc(p.variety)}</button></td>${cells}
       <td class="num price bestcol">${bestCell}</td>
       <td class="num">${p.spread != null ? `<span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</td>
       <td>${sparkline(p)}</td></tr>`;
