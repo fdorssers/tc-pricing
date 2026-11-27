@@ -12,7 +12,7 @@
   /* Colour chart world: matte card stock, ink, hairline rules. Colour is spent on swatches and seller inks. */
   :root {
     --bg: #e6e7e2; --surface: #f3f3ef; --ink: #1b1d1f; --muted: #575c60; --rule: #c4c6bf; --rule-soft: #dcddd7;
-    --row-hover: #eaeae5; --stale: #62676b; --up: #b42318; --down: #1d7342; --focus: #1b1d1f;
+    --row-hover: #eaeae5; --fam: #ebebe6; --stale: #62676b; --up: #b42318; --down: #1d7342; --focus: #1b1d1f;
     --s0: #2b4687; --s1: #873870; --s2: #1b6870; --s3: #4a4f53;
     --chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23575c60' stroke-width='1.5'/%3E%3C/svg%3E");
     /* Swatches are physical colours: the same in both themes. */
@@ -22,14 +22,14 @@
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #1c1e1d; --surface: #242725; --ink: #e8e8e3; --muted: #a3a8a4; --rule: #3b3f3c; --rule-soft: #2f3330;
-      --row-hover: #2a2d2b; --stale: #949994; --up: #f2877b; --down: #72cf92; --focus: #e8e8e3;
+      --row-hover: #2a2d2b; --fam: #202321; --stale: #949994; --up: #f2877b; --down: #72cf92; --focus: #e8e8e3;
       --s0: #93abe3; --s1: #b7a4ec; --s2: #c8cbc5; --s3: #7f95c9; --sw-edge: rgba(255, 255, 255, .25);
       --chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a3a8a4' stroke-width='1.5'/%3E%3C/svg%3E");
     }
   }
   :root[data-theme="dark"] {
     --bg: #1c1e1d; --surface: #242725; --ink: #e8e8e3; --muted: #a3a8a4; --rule: #3b3f3c; --rule-soft: #2f3330;
-    --row-hover: #2a2d2b; --stale: #949994; --up: #f2877b; --down: #72cf92; --focus: #e8e8e3;
+    --row-hover: #2a2d2b; --fam: #202321; --stale: #949994; --up: #f2877b; --down: #72cf92; --focus: #e8e8e3;
     --s0: #93abe3; --s1: #b7a4ec; --s2: #c8cbc5; --s3: #7f95c9; --sw-edge: rgba(255, 255, 255, .25);
     --chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a3a8a4' stroke-width='1.5'/%3E%3C/svg%3E");
   }
@@ -119,6 +119,22 @@
   th.num, td.num { text-align: right; }
   tbody tr { cursor: pointer; }
   tbody tr:hover { background: var(--row-hover); }
+  /* Group by family: a heading row per family, its colour types indented underneath. */
+  tbody tr.fam, tbody tr.fam:hover { cursor: default; background: var(--fam); }
+  tr.fam td { border-top: 1px solid var(--rule); padding-top: 11px; padding-bottom: 5px; }
+  tbody tr.fam:first-child td { border-top: 0; }
+  .famhead { display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; }
+  .famhead b { font-size: 15.5px; font-weight: 700; font-stretch: 92%; }
+  .famhead .n { color: var(--muted); font-size: 12.5px; }
+  tr.member .plantcell { padding-left: 14px; }
+  /* A one-plant family after a group gets the same divider as a family heading, so it never reads as part of that group. */
+  tr.member + tr:not(.member):not(.fam) td { border-top: 1px solid var(--rule); }
+  @media (max-width: 900px) {
+    /* The heading spans every column; only its text stays pinned while the prices scroll sideways. */
+    tr.fam td, tbody tr.fam:hover td { position: static; min-width: 0; box-shadow: none; background: var(--fam); }
+    .famhead { position: sticky; left: 12px; width: max-content; max-width: calc(100vw - 58px); }
+  }
+  @media (max-width: 600px) { tr.member .plantcell { padding-left: 6px; } }
 
   .plantcell { display: flex; align-items: center; gap: 12px; }
   /* The plant name is a button so rows can be opened with the keyboard (Tab, then Enter). */
@@ -206,6 +222,7 @@
     <select id="seller" aria-label="Seller"><option value="">All sellers</option></select>
     <label><input type="checkbox" id="multi"> Sold by 2+ sellers now</label>
     <label><input type="checkbox" id="current" checked> Available now only</label>
+    <label><input type="checkbox" id="group"> Group by family</label>
   </div>
   <div class="fan" id="fan" role="group" aria-label="Variegation"></div>
 
@@ -299,6 +316,9 @@ function strip(keys, cls = '') {
   return `<span class="strip ${cls}" aria-hidden="true">${cells.map(c => `<i class="sw-${c}"></i>`).join('')}</span>`;
 }
 
+// Words that start the colour-type part of a name. Name-based, so a few cultivars land in the wrong family.
+const FAMILY_CUT = /\s(?:(?:[abc]\s)?grade\b|sectoral\b|albo\b|aurea\b|mint\b|pink\b|lava\b|tri-?colou?r\b|variegat\w*|gold\b|golden\b|green\b|white\b|camouflage\b|snowflake\b|stardust\b|super\b)/i;
+
 // ---------- model ----------
 let SELLERS = [], SELLER_DATES = {}, LATEST = {}, PLANTS = [], ALL_DATES = [], FIRST = 0, LAST_ALL = 0;
 const DAY = 864e5;
@@ -333,6 +353,12 @@ function build(records) {
     p.name = p.genus + ' ' + p.variety;
     p.vars = variegation(p.genus, p.variety);
     p.code = varCode(p.vars);
+    // Family: the name up to the first colour or variegation word ("Polly"); the rest names the type.
+    const m = FAMILY_CUT.exec(p.variety);
+    p.family = p.genus + ' ' + (m ? p.variety.slice(0, m.index) : p.variety).trim();
+    p.famBase = p.family.slice(p.genus.length + 1);
+    p.typeLabel = (m ? p.variety.slice(m.index) : '').replace(/\bvariegat\w*\b/i, '').replace(/\s+/g, ' ').trim()
+      || (p.vars.includes('var') ? 'Variegated' : p.vars[0] === 'green' ? 'Green' : p.variety);
     p.cur = {};
     for (const s of Object.keys(p.by)) {
       const series = [...p.by[s].values()].filter(o => o.price != null).sort((a, b) => a.t - b.t);
@@ -362,7 +388,7 @@ function build(records) {
 }
 
 // ---------- UI state ----------
-const DEFAULTS = { q: '', genus: '', seller: '', var: '', multi: false, current: true, sort: 'name', dir: 1 };
+const DEFAULTS = { q: '', genus: '', seller: '', var: '', multi: false, current: true, group: false, sort: 'name', dir: 1 };
 const state = { ...DEFAULTS };
 const FAN = [...VARS.map(x => x.key), 'var', 'green'];
 
@@ -381,7 +407,7 @@ function readHash() {
   if (![...$('seller').options].some(o => o.value === state.seller)) state.seller = '';
   if (state.var && !FAN.includes(state.var)) state.var = '';
   $('q').value = state.q; $('genus').value = state.genus; $('seller').value = state.seller;
-  $('multi').checked = state.multi; $('current').checked = state.current;
+  $('multi').checked = state.multi; $('current').checked = state.current; $('group').checked = state.group;
 }
 function writeHash() {
   const h = new URLSearchParams();
@@ -482,7 +508,7 @@ function renderTable() {
     $('tbody').innerHTML = `<tr class="empty"><td colspan="${cols.length}"><div class="emptymsg">No plants match these filters. <button class="linkbtn" type="button" id="reset">Clear filters</button></div></td></tr>`;
     return;
   }
-  $('tbody').innerHTML = rows.map(p => {
+  const rowHtml = (p, member) => {
     const cells = SELLERS.map(s => {
       const c = p.cur[s];
       if (!c) return '<td class="num sc"></td>';
@@ -498,17 +524,31 @@ function renderTable() {
       const bag = c.size > 1 ? `<span class="bag">${bagNote(c)}</span>` : '';
       return `<td class="num sc"><span class="price${best ? ' best' : ''}">${eur(c.price)}</span>${chg}${bag}</td>`;
     }).join('');
-    const tag = [p.genus, p.code].filter(Boolean).join(' · ');
+    // Inside a family group the heading already names genus and family, so the row names only the type.
+    const tag = member ? p.code : [p.genus, p.code].filter(Boolean).join(' · ');
     const bestSellers = SELLERS.filter(s => isBest(p, p.cur[s]));
     // A bag price only wins when nobody sells singles; say so, as the seller columns do.
     const bestBag = !p.hasSingle && bestSellers.length ? bagNote(p.cur[bestSellers[0]]) : '';
     const bestCell = p.best == null ? '' : `<span class="price${p.nCurrent >= 2 ? ' best' : ''}">${eur(p.best)}</span>`
       + `<span class="who">${esc(bestSellers.join(', '))}${p.spread != null ? ` · <span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</span>`
       + (bestBag ? `<span class="bag">${bestBag}</span>` : '');
-    return `<tr data-i="${p.idx}"><td><div class="plantcell">${strip(p.vars)}<button class="plant" type="button" title="Show price history"><span class="caps">${esc(tag)}</span>${esc(p.variety)}</button></div></td>
+    return `<tr data-i="${p.idx}"${member ? ' class="member"' : ''}><td><div class="plantcell">${strip(p.vars)}<button class="plant" type="button" title="Show price history">${tag ? `<span class="caps">${esc(tag)}</span>` : ''}${esc(member ? p.rowLabel : p.variety)}</button></div></td>
       <td class="num bestm">${bestCell}</td>${cells}
       <td class="num spread">${p.spread != null ? `<span class="${p.spread > 0.25 ? 'up' : 'flat'}">+${Math.round(p.spread * 100)}%</span>` : ''}</td></tr>`;
-  }).join('');
+  };
+  if (!state.group) { $('tbody').innerHTML = rows.map(p => rowHtml(p, false)).join(''); return; }
+  // Two-level sort for free: rows are already sorted, so ordering families by their first row puts each
+  // family where its best row would be, and keeps its types in the same sort order underneath.
+  const fams = new Map();
+  for (const p of rows) (fams.get(p.family) ?? fams.set(p.family, []).get(p.family)).push(p);
+  // Two types with the same short label ("Pink" and "Pink Variegated"): show the full name after the family.
+  for (const ps of fams.values()) for (const p of ps) {
+    p.rowLabel = ps.some(o => o !== p && o.typeLabel === p.typeLabel) ? p.variety.slice(p.famBase.length).trim() || p.variety : p.typeLabel;
+  }
+  $('count').textContent += ` in ${fams.size} ${fams.size === 1 ? 'family' : 'families'}`;
+  $('tbody').innerHTML = [...fams.values()].map(ps => ps.length === 1 ? rowHtml(ps[0], false)
+    : `<tr class="fam"><td colspan="${cols.length}"><div class="famhead"><span class="caps">${esc(ps[0].genus)}</span><b>${esc(ps[0].famBase)}</b><span class="n">${ps.length} types</span></div></td></tr>`
+      + ps.map(p => rowHtml(p, true)).join('')).join('');
 }
 
 function render() { renderFan(); renderSellers(); renderTable(); document.querySelector('.tablebox').dispatchEvent(new Event('scroll')); }
@@ -571,6 +611,7 @@ function init(text) {
   $('seller').addEventListener('change', e => { state.seller = e.target.value; renderTable(); });
   $('multi').addEventListener('change', e => { state.multi = e.target.checked; render(); });
   $('current').addEventListener('change', e => { state.current = e.target.checked; render(); });
+  $('group').addEventListener('change', e => { state.group = e.target.checked; renderTable(); });
   $('fan').addEventListener('click', e => {
     const k = e.target.closest('.chip')?.dataset.var; if (!k) return;
     state.var = state.var === k ? '' : k;
