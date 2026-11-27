@@ -1,0 +1,3 @@
+# Impeccable install (skill and agents), kept out of the site repo
+.claude/agents/
+.claude/skills/
