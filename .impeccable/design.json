@@ -1,0 +1,761 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T12:10:00Z",
+  "title": "Design System: TC Plant Prices",
+  "extensions": {
+    "colorMeta": {
+      "card-stock": {
+        "role": "neutral",
+        "displayName": "Card Stock",
+        "canonical": "#e6e7e2",
+        "oklch": "oklch(92.6% 0.007 115.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 115.7)",
+          "oklch(26.4% 0.007 115.7)",
+          "oklch(37.9% 0.007 115.7)",
+          "oklch(49.3% 0.007 115.7)",
+          "oklch(60.7% 0.007 115.7)",
+          "oklch(72.1% 0.007 115.7)",
+          "oklch(83.6% 0.007 115.7)",
+          "oklch(95.0% 0.001 115.7)"
+        ]
+      },
+      "card-face": {
+        "role": "neutral",
+        "displayName": "Card Face",
+        "canonical": "#f3f3ef",
+        "oklch": "oklch(96.3% 0.005 106.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 106.5)",
+          "oklch(26.4% 0.005 106.5)",
+          "oklch(37.9% 0.005 106.5)",
+          "oklch(49.3% 0.005 106.5)",
+          "oklch(60.7% 0.005 106.5)",
+          "oklch(72.1% 0.005 106.5)",
+          "oklch(83.6% 0.005 106.5)",
+          "oklch(95.0% 0.001 106.5)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#1b1d1f",
+        "oklch": "oklch(22.9% 0.005 248.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 248.0)",
+          "oklch(26.4% 0.005 248.0)",
+          "oklch(37.9% 0.005 248.0)",
+          "oklch(49.3% 0.005 248.0)",
+          "oklch(60.7% 0.005 248.0)",
+          "oklch(72.1% 0.005 248.0)",
+          "oklch(83.6% 0.005 248.0)",
+          "oklch(95.0% 0.001 248.0)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#575c60",
+        "oklch": "oklch(47.2% 0.009 241.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 241.8)",
+          "oklch(26.4% 0.009 241.8)",
+          "oklch(37.9% 0.009 241.8)",
+          "oklch(49.3% 0.009 241.8)",
+          "oklch(60.7% 0.009 241.8)",
+          "oklch(72.1% 0.009 241.8)",
+          "oklch(83.6% 0.009 241.8)",
+          "oklch(95.0% 0.001 241.8)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#c4c6bf",
+        "oklch": "oklch(82.3% 0.010 119.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 119.6)",
+          "oklch(26.4% 0.010 119.6)",
+          "oklch(37.9% 0.010 119.6)",
+          "oklch(49.3% 0.010 119.6)",
+          "oklch(60.7% 0.010 119.6)",
+          "oklch(72.1% 0.010 119.6)",
+          "oklch(83.6% 0.010 119.6)",
+          "oklch(95.0% 0.001 119.6)"
+        ]
+      },
+      "hairline-soft": {
+        "role": "neutral",
+        "displayName": "Soft Hairline",
+        "canonical": "#dcddd7",
+        "oklch": "oklch(89.5% 0.008 114.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 114.2)",
+          "oklch(26.4% 0.008 114.2)",
+          "oklch(37.9% 0.008 114.2)",
+          "oklch(49.3% 0.008 114.2)",
+          "oklch(60.7% 0.008 114.2)",
+          "oklch(72.1% 0.008 114.2)",
+          "oklch(83.6% 0.008 114.2)",
+          "oklch(95.0% 0.001 114.2)"
+        ]
+      },
+      "row-hover": {
+        "role": "neutral",
+        "displayName": "Row Hover",
+        "canonical": "#eaeae5",
+        "oklch": "oklch(93.6% 0.007 106.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 106.5)",
+          "oklch(26.4% 0.007 106.5)",
+          "oklch(37.9% 0.007 106.5)",
+          "oklch(49.3% 0.007 106.5)",
+          "oklch(60.7% 0.007 106.5)",
+          "oklch(72.1% 0.007 106.5)",
+          "oklch(83.6% 0.007 106.5)",
+          "oklch(95.0% 0.001 106.5)"
+        ]
+      },
+      "stale-grey": {
+        "role": "neutral",
+        "displayName": "Stale Grey",
+        "canonical": "#62676b",
+        "oklch": "oklch(51.1% 0.009 241.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 241.8)",
+          "oklch(26.4% 0.009 241.8)",
+          "oklch(37.9% 0.009 241.8)",
+          "oklch(49.3% 0.009 241.8)",
+          "oklch(60.7% 0.009 241.8)",
+          "oklch(72.1% 0.009 241.8)",
+          "oklch(83.6% 0.009 241.8)",
+          "oklch(95.0% 0.001 241.8)"
+        ]
+      },
+      "price-up": {
+        "role": "tertiary",
+        "displayName": "Price Up Red",
+        "canonical": "#b42318",
+        "oklch": "oklch(50.0% 0.182 29.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.027 29.5)",
+          "oklch(26.4% 0.182 29.5)",
+          "oklch(37.9% 0.182 29.5)",
+          "oklch(49.3% 0.182 29.5)",
+          "oklch(60.7% 0.182 29.5)",
+          "oklch(72.1% 0.182 29.5)",
+          "oklch(83.6% 0.182 29.5)",
+          "oklch(95.0% 0.027 29.5)"
+        ]
+      },
+      "price-down": {
+        "role": "tertiary",
+        "displayName": "Price Down Green",
+        "canonical": "#1d7342",
+        "oklch": "oklch(49.3% 0.112 153.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.017 153.6)",
+          "oklch(26.4% 0.112 153.6)",
+          "oklch(37.9% 0.112 153.6)",
+          "oklch(49.3% 0.112 153.6)",
+          "oklch(60.7% 0.112 153.6)",
+          "oklch(72.1% 0.112 153.6)",
+          "oklch(83.6% 0.112 153.6)",
+          "oklch(95.0% 0.017 153.6)"
+        ]
+      },
+      "seller-ink-0": {
+        "role": "secondary",
+        "displayName": "Seller Ink 0 (Prussian Blue)",
+        "canonical": "#2b4687",
+        "oklch": "oklch(40.9% 0.113 264.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.017 264.9)",
+          "oklch(26.4% 0.113 264.9)",
+          "oklch(37.9% 0.113 264.9)",
+          "oklch(49.3% 0.113 264.9)",
+          "oklch(60.7% 0.113 264.9)",
+          "oklch(72.1% 0.113 264.9)",
+          "oklch(83.6% 0.113 264.9)",
+          "oklch(95.0% 0.017 264.9)"
+        ]
+      },
+      "seller-ink-1": {
+        "role": "secondary",
+        "displayName": "Seller Ink 1 (Plum)",
+        "canonical": "#873870",
+        "oklch": "oklch(46.7% 0.128 340.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.019 340.3)",
+          "oklch(26.4% 0.128 340.3)",
+          "oklch(37.9% 0.128 340.3)",
+          "oklch(49.3% 0.128 340.3)",
+          "oklch(60.7% 0.128 340.3)",
+          "oklch(72.1% 0.128 340.3)",
+          "oklch(83.6% 0.128 340.3)",
+          "oklch(95.0% 0.019 340.3)"
+        ]
+      },
+      "seller-ink-2": {
+        "role": "secondary",
+        "displayName": "Seller Ink 2 (Deep Teal)",
+        "canonical": "#1b6870",
+        "oklch": "oklch(47.6% 0.072 205.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.011 205.3)",
+          "oklch(26.4% 0.072 205.3)",
+          "oklch(37.9% 0.072 205.3)",
+          "oklch(49.3% 0.072 205.3)",
+          "oklch(60.7% 0.072 205.3)",
+          "oklch(72.1% 0.072 205.3)",
+          "oklch(83.6% 0.072 205.3)",
+          "oklch(95.0% 0.011 205.3)"
+        ]
+      },
+      "seller-ink-3": {
+        "role": "secondary",
+        "displayName": "Seller Ink 3 (Slate)",
+        "canonical": "#4a4f53",
+        "oklch": "oklch(42.4% 0.009 241.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 241.9)",
+          "oklch(26.4% 0.009 241.9)",
+          "oklch(37.9% 0.009 241.9)",
+          "oklch(49.3% 0.009 241.9)",
+          "oklch(60.7% 0.009 241.9)",
+          "oklch(72.1% 0.009 241.9)",
+          "oklch(83.6% 0.009 241.9)",
+          "oklch(95.0% 0.001 241.9)"
+        ]
+      },
+      "card-stock-dark": {
+        "role": "neutral",
+        "displayName": "Charcoal Card Stock",
+        "canonical": "#1c1e1d",
+        "oklch": "oklch(23.3% 0.004 164.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 164.7)",
+          "oklch(26.4% 0.004 164.7)",
+          "oklch(37.9% 0.004 164.7)",
+          "oklch(49.3% 0.004 164.7)",
+          "oklch(60.7% 0.004 164.7)",
+          "oklch(72.1% 0.004 164.7)",
+          "oklch(83.6% 0.004 164.7)",
+          "oklch(95.0% 0.001 164.7)"
+        ]
+      },
+      "card-face-dark": {
+        "role": "neutral",
+        "displayName": "Charcoal Card Face",
+        "canonical": "#242725",
+        "oklch": "oklch(26.9% 0.006 156.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 156.8)",
+          "oklch(26.4% 0.006 156.8)",
+          "oklch(37.9% 0.006 156.8)",
+          "oklch(49.3% 0.006 156.8)",
+          "oklch(60.7% 0.006 156.8)",
+          "oklch(72.1% 0.006 156.8)",
+          "oklch(83.6% 0.006 156.8)",
+          "oklch(95.0% 0.001 156.8)"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Pale Ink",
+        "canonical": "#e8e8e3",
+        "oklch": "oklch(93.0% 0.007 106.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 106.5)",
+          "oklch(26.4% 0.007 106.5)",
+          "oklch(37.9% 0.007 106.5)",
+          "oklch(49.3% 0.007 106.5)",
+          "oklch(60.7% 0.007 106.5)",
+          "oklch(72.1% 0.007 106.5)",
+          "oklch(83.6% 0.007 106.5)",
+          "oklch(95.0% 0.001 106.5)"
+        ]
+      },
+      "graphite-dark": {
+        "role": "neutral",
+        "displayName": "Pale Graphite",
+        "canonical": "#a3a8a4",
+        "oklch": "oklch(72.6% 0.008 151.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 151.8)",
+          "oklch(26.4% 0.008 151.8)",
+          "oklch(37.9% 0.008 151.8)",
+          "oklch(49.3% 0.008 151.8)",
+          "oklch(60.7% 0.008 151.8)",
+          "oklch(72.1% 0.008 151.8)",
+          "oklch(83.6% 0.008 151.8)",
+          "oklch(95.0% 0.001 151.8)"
+        ]
+      },
+      "hairline-dark": {
+        "role": "neutral",
+        "displayName": "Dark Hairline",
+        "canonical": "#3b3f3c",
+        "oklch": "oklch(36.3% 0.007 153.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 153.5)",
+          "oklch(26.4% 0.007 153.5)",
+          "oklch(37.9% 0.007 153.5)",
+          "oklch(49.3% 0.007 153.5)",
+          "oklch(60.7% 0.007 153.5)",
+          "oklch(72.1% 0.007 153.5)",
+          "oklch(83.6% 0.007 153.5)",
+          "oklch(95.0% 0.001 153.5)"
+        ]
+      },
+      "hairline-soft-dark": {
+        "role": "neutral",
+        "displayName": "Dark Soft Hairline",
+        "canonical": "#2f3330",
+        "oklch": "oklch(31.6% 0.008 153.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 153.5)",
+          "oklch(26.4% 0.008 153.5)",
+          "oklch(37.9% 0.008 153.5)",
+          "oklch(49.3% 0.008 153.5)",
+          "oklch(60.7% 0.008 153.5)",
+          "oklch(72.1% 0.008 153.5)",
+          "oklch(83.6% 0.008 153.5)",
+          "oklch(95.0% 0.001 153.5)"
+        ]
+      },
+      "row-hover-dark": {
+        "role": "neutral",
+        "displayName": "Dark Row Hover",
+        "canonical": "#2a2d2b",
+        "oklch": "oklch(29.3% 0.006 156.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 156.9)",
+          "oklch(26.4% 0.006 156.9)",
+          "oklch(37.9% 0.006 156.9)",
+          "oklch(49.3% 0.006 156.9)",
+          "oklch(60.7% 0.006 156.9)",
+          "oklch(72.1% 0.006 156.9)",
+          "oklch(83.6% 0.006 156.9)",
+          "oklch(95.0% 0.001 156.9)"
+        ]
+      },
+      "stale-grey-dark": {
+        "role": "neutral",
+        "displayName": "Dark Stale Grey",
+        "canonical": "#949994",
+        "oklch": "oklch(67.7% 0.009 145.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 145.5)",
+          "oklch(26.4% 0.009 145.5)",
+          "oklch(37.9% 0.009 145.5)",
+          "oklch(49.3% 0.009 145.5)",
+          "oklch(60.7% 0.009 145.5)",
+          "oklch(72.1% 0.009 145.5)",
+          "oklch(83.6% 0.009 145.5)",
+          "oklch(95.0% 0.001 145.5)"
+        ]
+      },
+      "price-up-dark": {
+        "role": "tertiary",
+        "displayName": "Price Up Coral",
+        "canonical": "#f2877b",
+        "oklch": "oklch(73.7% 0.133 27.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.020 27.4)",
+          "oklch(26.4% 0.133 27.4)",
+          "oklch(37.9% 0.133 27.4)",
+          "oklch(49.3% 0.133 27.4)",
+          "oklch(60.7% 0.133 27.4)",
+          "oklch(72.1% 0.133 27.4)",
+          "oklch(83.6% 0.133 27.4)",
+          "oklch(95.0% 0.020 27.4)"
+        ]
+      },
+      "price-down-dark": {
+        "role": "tertiary",
+        "displayName": "Price Down Mint",
+        "canonical": "#72cf92",
+        "oklch": "oklch(78.1% 0.125 153.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.019 153.7)",
+          "oklch(26.4% 0.125 153.7)",
+          "oklch(37.9% 0.125 153.7)",
+          "oklch(49.3% 0.125 153.7)",
+          "oklch(60.7% 0.125 153.7)",
+          "oklch(72.1% 0.125 153.7)",
+          "oklch(83.6% 0.125 153.7)",
+          "oklch(95.0% 0.019 153.7)"
+        ]
+      },
+      "seller-ink-0-dark": {
+        "role": "secondary",
+        "displayName": "Seller Ink 0, dark",
+        "canonical": "#93abe3",
+        "oklch": "oklch(74.4% 0.086 266.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.013 266.4)",
+          "oklch(26.4% 0.086 266.4)",
+          "oklch(37.9% 0.086 266.4)",
+          "oklch(49.3% 0.086 266.4)",
+          "oklch(60.7% 0.086 266.4)",
+          "oklch(72.1% 0.086 266.4)",
+          "oklch(83.6% 0.086 266.4)",
+          "oklch(95.0% 0.013 266.4)"
+        ]
+      },
+      "seller-ink-1-dark": {
+        "role": "secondary",
+        "displayName": "Seller Ink 1, dark",
+        "canonical": "#b7a4ec",
+        "oklch": "oklch(76.1% 0.103 296.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.015 296.0)",
+          "oklch(26.4% 0.103 296.0)",
+          "oklch(37.9% 0.103 296.0)",
+          "oklch(49.3% 0.103 296.0)",
+          "oklch(60.7% 0.103 296.0)",
+          "oklch(72.1% 0.103 296.0)",
+          "oklch(83.6% 0.103 296.0)",
+          "oklch(95.0% 0.015 296.0)"
+        ]
+      },
+      "seller-ink-2-dark": {
+        "role": "secondary",
+        "displayName": "Seller Ink 2, dark",
+        "canonical": "#c8cbc5",
+        "oklch": "oklch(83.8% 0.009 128.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 128.6)",
+          "oklch(26.4% 0.009 128.6)",
+          "oklch(37.9% 0.009 128.6)",
+          "oklch(49.3% 0.009 128.6)",
+          "oklch(60.7% 0.009 128.6)",
+          "oklch(72.1% 0.009 128.6)",
+          "oklch(83.6% 0.009 128.6)",
+          "oklch(95.0% 0.001 128.6)"
+        ]
+      },
+      "seller-ink-3-dark": {
+        "role": "secondary",
+        "displayName": "Seller Ink 3, dark",
+        "canonical": "#7f95c9",
+        "oklch": "oklch(67.3% 0.082 266.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.012 266.5)",
+          "oklch(26.4% 0.082 266.5)",
+          "oklch(37.9% 0.082 266.5)",
+          "oklch(49.3% 0.082 266.5)",
+          "oklch(60.7% 0.082 266.5)",
+          "oklch(72.1% 0.082 266.5)",
+          "oklch(83.6% 0.082 266.5)",
+          "oklch(95.0% 0.012 266.5)"
+        ]
+      },
+      "swatch-leaf-green": {
+        "role": "primary",
+        "displayName": "Leaf Green",
+        "canonical": "#3d7a4a",
+        "oklch": "oklch(52.5% 0.098 149.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.015 149.0)",
+          "oklch(26.4% 0.098 149.0)",
+          "oklch(37.9% 0.098 149.0)",
+          "oklch(49.3% 0.098 149.0)",
+          "oklch(60.7% 0.098 149.0)",
+          "oklch(72.1% 0.098 149.0)",
+          "oklch(83.6% 0.098 149.0)",
+          "oklch(95.0% 0.015 149.0)"
+        ]
+      },
+      "swatch-albo": {
+        "role": "primary",
+        "displayName": "Albo Cream",
+        "canonical": "#f2f1ea",
+        "oklch": "oklch(95.7% 0.009 100.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 100.0)",
+          "oklch(26.4% 0.009 100.0)",
+          "oklch(37.9% 0.009 100.0)",
+          "oklch(49.3% 0.009 100.0)",
+          "oklch(60.7% 0.009 100.0)",
+          "oklch(72.1% 0.009 100.0)",
+          "oklch(83.6% 0.009 100.0)",
+          "oklch(95.0% 0.001 100.0)"
+        ]
+      },
+      "swatch-aurea": {
+        "role": "primary",
+        "displayName": "Aurea Yellow",
+        "canonical": "#e2bd2c",
+        "oklch": "oklch(80.8% 0.155 93.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.023 93.4)",
+          "oklch(26.4% 0.155 93.4)",
+          "oklch(37.9% 0.155 93.4)",
+          "oklch(49.3% 0.155 93.4)",
+          "oklch(60.7% 0.155 93.4)",
+          "oklch(72.1% 0.155 93.4)",
+          "oklch(83.6% 0.155 93.4)",
+          "oklch(95.0% 0.023 93.4)"
+        ]
+      },
+      "swatch-mint": {
+        "role": "primary",
+        "displayName": "Mint",
+        "canonical": "#a8d5b4",
+        "oklch": "oklch(83.2% 0.066 153.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.010 153.0)",
+          "oklch(26.4% 0.066 153.0)",
+          "oklch(37.9% 0.066 153.0)",
+          "oklch(49.3% 0.066 153.0)",
+          "oklch(60.7% 0.066 153.0)",
+          "oklch(72.1% 0.066 153.0)",
+          "oklch(83.6% 0.066 153.0)",
+          "oklch(95.0% 0.010 153.0)"
+        ]
+      },
+      "swatch-pink": {
+        "role": "primary",
+        "displayName": "Pink",
+        "canonical": "#e897b0",
+        "oklch": "oklch(76.4% 0.102 359.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.015 359.8)",
+          "oklch(26.4% 0.102 359.8)",
+          "oklch(37.9% 0.102 359.8)",
+          "oklch(49.3% 0.102 359.8)",
+          "oklch(60.7% 0.102 359.8)",
+          "oklch(72.1% 0.102 359.8)",
+          "oklch(83.6% 0.102 359.8)",
+          "oklch(95.0% 0.015 359.8)"
+        ]
+      },
+      "swatch-lava": {
+        "role": "primary",
+        "displayName": "Lava Red-Orange",
+        "canonical": "#d4572e",
+        "oklch": "oklch(61.2% 0.167 38.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 38.0)",
+          "oklch(26.4% 0.167 38.0)",
+          "oklch(37.9% 0.167 38.0)",
+          "oklch(49.3% 0.167 38.0)",
+          "oklch(60.7% 0.167 38.0)",
+          "oklch(72.1% 0.167 38.0)",
+          "oklch(83.6% 0.167 38.0)",
+          "oklch(95.0% 0.025 38.0)"
+        ]
+      },
+      "swatch-edge": {
+        "role": "primary",
+        "displayName": "Swatch Edge",
+        "canonical": "rgba(0, 0, 0, .22)"
+      },
+      "swatch-edge-dark": {
+        "role": "primary",
+        "displayName": "Swatch Edge, dark",
+        "canonical": "rgba(255, 255, 255, .25)"
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The page title only; bold Archivo at 92% width."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The plant name in the history dialog."
+      },
+      "seller-name": {
+        "displayName": "Seller Name",
+        "purpose": "Seller names in the seller strip."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Plant names, prices and table text; tabular figures."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Subtitle, row count, filter labels; 12.5px for footnote, seller detail and chip labels."
+      },
+      "annotation": {
+        "displayName": "Annotation",
+        "purpose": "Price-change line, bag-of-N line, phone Cheapest seller name, chip counts."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase tracked code label: genus and swatch code above plant names, column headers, field labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "selected-ring",
+        "value": "inset 0 0 0 1px var(--ink)",
+        "purpose": "Thickens a selected chip's border to a 2px ink outline. A hairline, not elevation."
+      },
+      {
+        "name": "pinned-column-rule",
+        "value": "1px 0 0 var(--rule)",
+        "purpose": "Hairline on the right edge of the pinned plant column at 900px and below. A rule, not elevation."
+      }
+    ],
+    "motion": [],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "600px",
+        "purpose": "max-width: pinned 150px plant column (min-width 0, width and max-width 150px), phone-only 102px Cheapest column (with a bag-of-N line when a bag price wins), 92px snap-scrolled seller columns, right-edge fade, wrapped chips."
+      },
+      {
+        "name": "tablet",
+        "value": "900px",
+        "purpose": "max-width: seller strip stacks to one column, table scrolls sideways with a pinned 210px plant column; the empty-state cell is unpinned and left-aligned while its message stays sticky at left 12px, max-width calc(100vw - 58px)."
+      },
+      {
+        "name": "desktop",
+        "value": "901px",
+        "purpose": "min-width: one-line rows with the price change inline after the price, 150px seller columns."
+      }
+    ],
+    "cssVariables": {
+      "light": "--bg: #e6e7e2; --surface: #f3f3ef; --ink: #1b1d1f; --muted: #575c60; --rule: #c4c6bf; --rule-soft: #dcddd7; --row-hover: #eaeae5; --stale: #62676b; --up: #b42318; --down: #1d7342; --focus: #1b1d1f; --s0: #2b4687; --s1: #873870; --s2: #1b6870; --s3: #4a4f53; --sw-green: #3d7a4a; --sw-albo: #f2f1ea; --sw-aurea: #e2bd2c; --sw-mint: #a8d5b4; --sw-pink: #e897b0; --sw-lava: #d4572e; --sw-edge: rgba(0, 0, 0, .22);",
+      "dark": "--bg: #1c1e1d; --surface: #242725; --ink: #e8e8e3; --muted: #a3a8a4; --rule: #3b3f3c; --rule-soft: #2f3330; --row-hover: #2a2d2b; --stale: #949994; --up: #f2877b; --down: #72cf92; --focus: #e8e8e3; --s0: #93abe3; --s1: #b7a4ec; --s2: #c8cbc5; --s3: #7f95c9; --sw-edge: rgba(255, 255, 255, .25);",
+      "chevLight": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23575c60' stroke-width='1.5'/%3E%3C/svg%3E\")",
+      "chevDark": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a3a8a4' stroke-width='1.5'/%3E%3C/svg%3E\")",
+      "note": "Swatch variables are not redefined in dark mode: the pigments are physical colours. --chev is redefined per theme so the drawn select chevron matches Graphite."
+    }
+  },
+  "components": [
+    {
+      "name": "Swatch Strip",
+      "kind": "custom",
+      "refersTo": "swatch-strip",
+      "description": "Painted variegation code: leaf green first, then the variegation colours; hatched for unspecified variegation, dashed-empty for no type.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#f2f1ea\"></i><i style=\"background:#f2f1ea\"></i></span><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#a8d5b4\"></i><i style=\"background:#e897b0\"></i></span><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#e2bd2c\"></i><i style=\"background:#e2bd2c\"></i></span><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#d4572e\"></i><i style=\"background:#d4572e\"></i></span><span class=\"ds-strip\"><i class=\"ds-hatch\"></i></span><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i></span><span class=\"ds-strip ds-none\"></span></div>",
+      "css": ".ds-row { display: flex; gap: 10px; align-items: center; } .ds-strip { display: inline-flex; width: 48px; height: 24px; border: 1px solid rgba(0,0,0,.22); border-radius: 2px; overflow: hidden; } .ds-strip i { flex: 1; } .ds-hatch { background: repeating-linear-gradient(135deg, #f2f1ea 0 3px, #3d7a4a 3px 5px); } .ds-none { border-style: dashed; border-color: #c4c6bf; }"
+    },
+    {
+      "name": "Variegation Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Filter chip in the variegation fan: flush swatch, label, Graphite count; selected gets a 2px ink outline.",
+      "html": "<div class=\"ds-fan\"><span class=\"ds-caps\">Variegation</span><button type=\"button\" class=\"ds-chip\" aria-pressed=\"true\"><span class=\"ds-sw\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#f2f1ea\"></i><i style=\"background:#f2f1ea\"></i></span>Albo <span class=\"ds-n\">212</span></button><button type=\"button\" class=\"ds-chip\" aria-pressed=\"false\"><span class=\"ds-sw\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#e897b0\"></i><i style=\"background:#e897b0\"></i></span>Pink <span class=\"ds-n\">41</span></button></div>",
+      "css": ".ds-fan { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-family: Archivo, system-ui, sans-serif; } .ds-caps { font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: #575c60; margin-right: 4px; } .ds-chip { font: inherit; font-size: 12.5px; color: #1b1d1f; background: #f3f3ef; border: 1px solid #c4c6bf; border-radius: 3px; padding: 3px 9px 3px 3px; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; } .ds-chip:hover { border-color: #575c60; } .ds-chip:focus-visible { outline: 2px solid #1b1d1f; outline-offset: 2px; } .ds-chip[aria-pressed=\"true\"] { border-color: #1b1d1f; box-shadow: inset 0 0 0 1px #1b1d1f; } .ds-sw { display: inline-flex; width: 26px; height: 22px; border: 1px solid rgba(0,0,0,.22); border-radius: 2px; overflow: hidden; } .ds-sw i { flex: 1; } .ds-n { color: #575c60; font-size: 11.5px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Card-face search input with hairline border and ink focus ring.",
+      "html": "<input type=\"search\" class=\"ds-field\" placeholder=\"Search plant (e.g. simpo albo)\">",
+      "css": ".ds-field { font: 14px/1.4 Archivo, system-ui, sans-serif; color: #1b1d1f; background: #f3f3ef; border: 1px solid #c4c6bf; border-radius: 3px; padding: 7px 10px; width: 280px; } .ds-field::placeholder { color: #575c60; opacity: 1; } .ds-field:focus-visible { outline: 2px solid #1b1d1f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Select",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Native select chrome removed; a drawn Graphite chevron sits 11px from the right.",
+      "html": "<select class=\"ds-select\"><option>All genera</option><option>Alocasia</option></select>",
+      "css": ".ds-select { font: 14px/1.4 Archivo, system-ui, sans-serif; color: #1b1d1f; appearance: none; -webkit-appearance: none; border: 1px solid #c4c6bf; border-radius: 3px; padding: 7px 30px 7px 10px; cursor: pointer; background: #f3f3ef url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23575c60' stroke-width='1.5'/%3E%3C/svg%3E\") no-repeat right 11px center; } .ds-select:focus-visible { outline: 2px solid #1b1d1f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The only bordered button: the history dialog's Close. Hairline outline, no fill.",
+      "html": "<button type=\"button\" class=\"ds-btn\">Close</button>",
+      "css": ".ds-btn { font: 14px/1.4 Archivo, system-ui, sans-serif; background: none; border: 1px solid #c4c6bf; color: #1b1d1f; border-radius: 3px; padding: 4px 10px; cursor: pointer; } .ds-btn:hover { border-color: #575c60; } .ds-btn:focus-visible { outline: 2px solid #1b1d1f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Button",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Underlined ink text button, used for Clear filters in the empty state.",
+      "html": "<button type=\"button\" class=\"ds-link\">Clear filters</button>",
+      "css": ".ds-link { font: 14px/1.4 Archivo, system-ui, sans-serif; color: #1b1d1f; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; } .ds-link:focus-visible { outline: 2px solid #1b1d1f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Seller Strip",
+      "kind": "card",
+      "refersTo": "seller-cell",
+      "description": "One flat row of seller cells divided by 1px hairline gaps: ink bar, name, basket change, detail lines.",
+      "html": "<div class=\"ds-sellers\"><div class=\"ds-seller\"><span class=\"ds-who\"><span class=\"ds-ink\" style=\"background:#2b4687\"></span>1Lab</span><span class=\"ds-chg ds-down\">▼4%</span><span class=\"ds-m\">€2,410 → €2,312 for the same 96 plants · 3 Sep → 25 Nov</span><span class=\"ds-m\"><span class=\"ds-up\">▲6</span> <span class=\"ds-down\">▼31</span> =59 · cheapest on <b>48%</b> of 120 shared</span></div><div class=\"ds-seller\"><span class=\"ds-who\"><span class=\"ds-ink\" style=\"background:#873870\"></span>Tea &amp; Sarah</span><span class=\"ds-chg ds-up\">▲2%</span><span class=\"ds-m\">€1,180 → €1,204 for the same 54 plants</span><span class=\"ds-m\"><span class=\"ds-up\">▲9</span> <span class=\"ds-down\">▼3</span> =42 · cheapest on <b>31%</b> of 88 shared</span></div></div>",
+      "css": ".ds-sellers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: #c4c6bf; border: 1px solid #c4c6bf; border-radius: 3px; overflow: hidden; font: 14px/1.4 Archivo, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: #1b1d1f; } .ds-seller { background: #f3f3ef; padding: 10px 14px; display: grid; grid-template-columns: auto 1fr; column-gap: 12px; row-gap: 2px; align-items: baseline; } .ds-who { font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 8px; } .ds-ink { width: 4px; height: 14px; border-radius: 1px; display: inline-block; } .ds-chg { font-weight: 700; font-size: 15px; text-align: right; } .ds-m { grid-column: 1 / -1; color: #575c60; font-size: 12.5px; } .ds-m b { color: #1b1d1f; font-weight: 600; } .ds-up { color: #b42318; } .ds-down { color: #1d7342; }"
+    },
+    {
+      "name": "Price Table",
+      "kind": "custom",
+      "refersTo": "table-header",
+      "description": "Swatch + code-labelled plant cell, seller columns with ink top rules, cheapest underlined, older-list prices grey italic, bag line, ▲/▼ change, drawn sort chevron.",
+      "html": "<table class=\"ds-table\"><thead><tr><th><span class=\"ds-sort\">Plant<svg width=\"10\" height=\"6\" viewBox=\"0 0 10 6\"><path d=\"M1 5l4-4 4 4\"/></svg></span></th><th class=\"ds-num ds-sc\" style=\"border-top-color:#2b4687\">1Lab</th><th class=\"ds-num ds-sc\" style=\"border-top-color:#873870\">Tea &amp; Sarah</th><th class=\"ds-num ds-sc\" style=\"border-top-color:#1b6870\">Yara</th><th class=\"ds-num ds-sc\">Spread</th></tr></thead><tbody><tr><td><div class=\"ds-pc\"><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#f2f1ea\"></i><i style=\"background:#f2f1ea\"></i></span><span><span class=\"ds-caps\">Alocasia · ALB</span>Simpo Albo Variegated</span></div></td><td class=\"ds-num ds-sc\"><span class=\"ds-best\">€38</span> <span class=\"ds-chg ds-down\">▼5%</span></td><td class=\"ds-num ds-sc\">€45 <span class=\"ds-chg ds-up\">▲12%</span><span class=\"ds-bag\">bag of 5 · €225</span></td><td class=\"ds-num ds-sc\"><span class=\"ds-old\">€41</span> <span class=\"ds-chg ds-old\">last 3 Mar</span></td><td class=\"ds-num ds-sc\">+18%</td></tr></tbody></table>",
+      "css": ".ds-table { border-collapse: separate; border-spacing: 0; font: 14px/1.4 Archivo, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: #1b1d1f; background: #f3f3ef; border: 1px solid #c4c6bf; border-radius: 3px; } .ds-table th, .ds-table td { padding: 5px 12px; border-bottom: 1px solid #dcddd7; text-align: left; vertical-align: middle; } .ds-table th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: #575c60; border-top: 3px solid transparent; border-bottom-color: #c4c6bf; white-space: nowrap; } .ds-table tbody tr:hover { background: #eaeae5; } .ds-num { text-align: right !important; } .ds-sc { border-left: 1px solid #dcddd7; } .ds-sort { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; } .ds-sort:hover { color: #1b1d1f; } .ds-sort path { fill: none; stroke: #575c60; stroke-width: 1.5; } .ds-pc { display: flex; align-items: center; gap: 12px; } .ds-strip { display: inline-flex; width: 48px; height: 24px; border: 1px solid rgba(0,0,0,.22); border-radius: 2px; overflow: hidden; } .ds-strip i { flex: 1; } .ds-caps { display: block; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: #575c60; } .ds-best { font-weight: 700; border-bottom: 2px solid #1b1d1f; padding-bottom: 1px; } .ds-chg { display: inline-block; font-size: 11.5px; margin-left: 6px; } .ds-bag { display: block; font-size: 11.5px; color: #575c60; } .ds-old { color: #62676b; font-style: italic; } .ds-up { color: #b42318; } .ds-down { color: #1d7342; }"
+    },
+    {
+      "name": "History Panel",
+      "kind": "custom",
+      "refersTo": "history-dialog",
+      "description": "Modal history dialog: swatch, code label and plant title, stepped per-seller chart, raw list rows with seller ink bars.",
+      "html": "<div class=\"ds-dlg\"><div class=\"ds-head\"><div class=\"ds-id\"><span class=\"ds-strip\"><i style=\"background:#3d7a4a\"></i><i style=\"background:#a8d5b4\"></i><i style=\"background:#a8d5b4\"></i></span><div><div class=\"ds-caps\">Monstera · MNT</div><h2 class=\"ds-h2\">Mint Variegated</h2></div></div><button type=\"button\" class=\"ds-close\">Close</button></div><div class=\"ds-body\"><div class=\"ds-chart\"></div><div class=\"ds-raw\"><div><span class=\"ds-ink\" style=\"background:#2b4687\"></span>25-11-2026 · 1Lab · 1 Plant/Bag · €38</div></div></div></div>",
+      "css": ".ds-dlg { border: 1px solid #c4c6bf; border-radius: 4px; background: #f3f3ef; color: #1b1d1f; width: 520px; font: 14px/1.4 Archivo, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px 0; gap: 12px; } .ds-id { display: flex; align-items: center; gap: 12px; } .ds-h2 { margin: 0; font-size: 19px; font-weight: 700; font-stretch: 92%; } .ds-caps { font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: #575c60; } .ds-strip { display: inline-flex; width: 48px; height: 24px; border: 1px solid rgba(0,0,0,.22); border-radius: 2px; overflow: hidden; } .ds-strip i { flex: 1; } .ds-close { font: inherit; background: none; border: 1px solid #c4c6bf; color: #1b1d1f; border-radius: 3px; padding: 4px 10px; cursor: pointer; } .ds-close:hover { border-color: #575c60; } .ds-close:focus-visible { outline: 2px solid #1b1d1f; outline-offset: 2px; } .ds-body { padding: 12px 18px 18px; } .ds-chart { height: 120px; margin-bottom: 14px; background-image: linear-gradient(#dcddd7 1px, transparent 1px); background-size: 100% 30px; } .ds-raw { font-size: 13px; border: 1px solid #c4c6bf; border-radius: 3px; padding: 8px 12px; } .ds-ink { width: 4px; height: 14px; border-radius: 1px; display: inline-block; margin-right: 8px; vertical-align: -1px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Colour Chart Fan",
+    "overview": "The price table reads like a horticultural colour chart: matte card stock, near-black ink, hairline rules, and a painted swatch strip beside every plant. Variegation is what a tissue-culture buyer pays for, so the colour code is the one place the page spends saturated colour. Everything else is ink on card, dense enough that about a dozen plant rows (around 40px each) fit on a laptop screen.\n\nThe system is flat and printed rather than lit. There are no lifted cards, no big hero numbers, no tinted panels; structure comes from 1px hairlines and from the tablebox and seller strip sitting as lighter card faces on a slightly darker card stock. Dark mode is the same chart printed on charcoal card: the swatches keep their physical colours, everything else inverts to pale ink.\n\nThe build replaced a generic dark green-black dashboard with rounded stat cards and oversized percentages. That look is rejected.",
+    "keyCharacteristics": [
+      "Matte card stock and card face, with near-black ink and two hairline weights.",
+      "Saturated colour only on variegation swatches; seller inks and the up/down pair are the only other hues, and they stay text-sized.",
+      "One typeface, Archivo, with tabular figures everywhere and 11px uppercase tracked labels for codes and headers.",
+      "Square corners (1–4px), no shadows, no elevation.",
+      "Dense one-line rows on desktop; a pinned plant column with snap-scrolled seller columns on phones."
+    ],
+    "rules": [
+      {
+        "name": "The Pigment Rule",
+        "body": "Saturated colour belongs to the swatches. Seller inks and the up/down pair are text-sized marks; no panel, badge or button is ever filled with colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Same Pigment Rule",
+        "body": "Swatch colours do not change with the theme. Only the swatch edge flips, from a 22% black edge on light card to a 25% white edge on dark card, so pale Albo still reads as a painted cell.",
+        "section": "colors"
+      },
+      {
+        "name": "The Code Label Rule",
+        "body": "The uppercase 11px label carries real data only: a genus, a swatch code, a column name, a field name. On phones its tracking tightens to 0.03em and it truncates with an ellipsis rather than wrapping.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every figure is tabular. Prices, percentages and counts align by digit in every column.",
+        "section": "typography"
+      },
+      {
+        "name": "The Printed Card Rule",
+        "body": "Surfaces are printed, not lifted. Separation comes from a 1px hairline or a step from card stock to card face, never from a shadow or blur.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do give every plant a swatch strip, painted from its name, with leaf green leading.",
+      "Do keep swatch pigments identical across themes and flip only the swatch edge.",
+      "Do use seller inks only as marks: the 4×14px ink bar, the 3px column top rule, chart lines.",
+      "Do mark the cheapest price with bold weight and a 2px Ink underline in place, not with a badge or fill.",
+      "Do set older-list prices in Stale Grey italic so freshness is visible at a glance.",
+      "Do draw sort direction as a stroked chevron, and keep ▲/▼ for price changes only.",
+      "Do separate surfaces with 1px hairlines and card-face-on-card-stock steps.",
+      "Do keep corners between 1px and 4px.",
+      "Do on phones, pin the plant column, snap seller columns to whole-column positions, and fade the right edge until the end."
+    ],
+    "donts": [
+      "Don't build a dark dashboard with rounded stat cards and giant percentages; that is the look this system replaced.",
+      "Don't use drop shadows or blur for depth.",
+      "Don't fill panels, badges or buttons with colour, and don't put a seller ink behind text.",
+      "Don't set up/down red and green larger than the text they annotate.",
+      "Don't leave native select chrome; use the drawn chevron.",
+      "Don't let a price column end in a cut-off fragment on phones."
+    ]
+  }
+}
