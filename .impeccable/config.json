@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-27T10:40:55.952Z",
+        "reason": "Claude triage: .raw wrapper's table cells carry 8px 12px padding (th, td rule), verified in rendered dialog at 1440px and 375px; detector sees the wrapper, not the cell padding"
+      }
+    ]
+  }
+}

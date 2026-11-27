@@ -9,24 +9,29 @@
   :root {
     --bg: #f6f7f5; --surface: #ffffff; --text: #1d2420; --muted: #66706a; --border: #e2e6e1;
     --accent: #2f6b3f; --up: #b42318; --down: #1f7a44; --best-bg: #e3f3e8; --best-text: #14532d;
-    --stale: #9aa39d; --row-hover: #f1f4f0;
+    --stale: #6c756f; --row-hover: #f1f4f0;
     --s0: #2563eb; --s1: #c2410c; --s2: #0f766e; --s3: #7c3aed;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #121614; --surface: #1a201c; --text: #e6ebe7; --muted: #9aa59e; --border: #2c3530;
       --accent: #7fc48f; --up: #f87171; --down: #4ade80; --best-bg: #173323; --best-text: #9ae6b4;
-      --stale: #66706a; --row-hover: #212923;
+      --stale: #838d86; --row-hover: #212923;
       --s0: #60a5fa; --s1: #fb923c; --s2: #2dd4bf; --s3: #a78bfa;
     }
   }
   :root[data-theme="dark"] {
     --bg: #121614; --surface: #1a201c; --text: #e6ebe7; --muted: #9aa59e; --border: #2c3530;
     --accent: #7fc48f; --up: #f87171; --down: #4ade80; --best-bg: #173323; --best-text: #9ae6b4;
-    --stale: #66706a; --row-hover: #212923;
+    --stale: #838d86; --row-hover: #212923;
     --s0: #60a5fa; --s1: #fb923c; --s2: #2dd4bf; --s3: #a78bfa;
   }
   * { box-sizing: border-box; }
+  /* Browser surfaces follow the palette instead of browser defaults. */
+  :root { accent-color: var(--accent); scrollbar-color: var(--border) transparent; }
+  ::selection { background: color-mix(in srgb, var(--accent) 32%, transparent); }
+  ::placeholder { color: var(--muted); opacity: 1; }
+  :is(input, select, button):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   body { margin: 0; background: var(--bg); color: var(--text);
          font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
@@ -37,8 +42,16 @@
     font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
     border-radius: 8px; padding: 7px 10px; }
   .filters input[type=search] { flex: 1 1 220px; min-width: 0; }
-  .filters label { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); }
+  .filters label { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); cursor: pointer; }
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  @media (max-width: 600px) {
+    .filters select { flex: 1 1 140px; }
+    /* Cards become a swipeable row so the table isn't pushed two screens down. */
+    .cards { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 84%;
+             overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+             margin: 0 -16px 18px; padding: 0 16px 4px; scroll-padding: 0 16px; }
+    .card { scroll-snap-align: start; }
+  }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
   .card h2 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
   .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
@@ -56,11 +69,19 @@
     th:first-child { z-index: 3; }
     tbody tr:hover td:first-child { background: var(--row-hover); }
   }
-  table { border-collapse: separate; border-spacing: 0; width: 100%; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; font-variant-numeric: tabular-nums; }
   th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+  /* Every header has a 3px top border (transparent unless it's a seller) so all labels share one baseline. */
   th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted);
-       cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; z-index: 2;
-       background: var(--surface); border-bottom: 2px solid var(--border); }
+       user-select: none; white-space: nowrap; position: sticky; top: 0; z-index: 2;
+       background: var(--surface); border-top: 3px solid transparent; border-bottom: 2px solid var(--border); }
+  .sort { font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; background: none;
+          border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .sort:hover { color: var(--text); }
+  .empty td { text-align: center; color: var(--muted); padding: 32px 12px; cursor: default; }
+  .empty:hover { background: none; }
+  .linkbtn { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer;
+             text-decoration: underline; text-underline-offset: 3px; }
   thead tr:first-child th:first-child { border-top-left-radius: 12px; }
   thead tr:first-child th:last-child { border-top-right-radius: 12px; }
   th.sc, td.sc { border-left: 1px solid var(--border); min-width: 104px; }
@@ -76,8 +97,7 @@
   /* The plant name is a button so rows can be opened with the keyboard (Tab, then Enter). */
   .plant { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .plant:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
-  .price { white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .price .chg { font-size: 12px; margin-left: 4px; }
+  .price { white-space: nowrap; }
   .best { background: var(--best-bg); color: var(--best-text); font-weight: 650; border-radius: 6px; padding: 2px 6px; }
   .stale { color: var(--stale); }
   .na { color: var(--stale); font-style: italic; }
@@ -86,14 +106,14 @@
            background: var(--surface); color: var(--text); }
   dialog::backdrop { background: rgba(0,0,0,.45); }
   .dlg-head { display: flex; justify-content: space-between; align-items: start; padding: 16px 18px 0; gap: 12px; }
-  .dlg-head h3 { margin: 0; font-size: 18px; }
+  .dlg-head h2 { margin: 0; font-size: 18px; }
   .dlg-body { padding: 12px 18px 18px; }
   .close { font: inherit; background: none; border: 1px solid var(--border); color: var(--text);
            border-radius: 8px; padding: 4px 10px; cursor: pointer; }
   .chartbox { position: relative; height: 300px; margin-bottom: 14px; }
   .raw { font-size: 13px; max-height: 260px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
-  .raw th { cursor: default; }
-  .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+  .raw :is(th, td) { white-space: nowrap; }
+  .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; max-width: 75ch; }
   .err { background: var(--surface); border: 1px solid var(--up); border-radius: 12px; padding: 16px; }
 </style>
 </head>
@@ -103,9 +123,9 @@
   <p class="sub" id="sub">Loading prices.csv…</p>
 
   <div class="filters">
-    <input type="search" id="q" placeholder="Search plant (e.g. simpo albo)">
-    <select id="genus"><option value="">All genera</option></select>
-    <select id="seller"><option value="">All sellers</option></select>
+    <input type="search" id="q" placeholder="Search plant (e.g. simpo albo)" aria-label="Search plants">
+    <select id="genus" aria-label="Genus"><option value="">All genera</option></select>
+    <select id="seller" aria-label="Seller"><option value="">All sellers</option></select>
     <label><input type="checkbox" id="multi"> Sold by 2+ sellers now</label>
     <label><input type="checkbox" id="current" checked> Available now only</label>
   </div>
@@ -116,12 +136,12 @@
     <thead id="thead"></thead>
     <tbody id="tbody"></tbody>
   </table></div>
-  <p class="note">Prices are per plant. "Current" means the price on the seller's most recent list. Grey prices come from an older list (the plant isn't on that seller's latest list) and are not counted as cheapest. Bag prices ("bag of 5") are shown per plant and only count as cheapest when no seller offers a single plant. The % next to a price is the change since that seller's previous price for the plant. Click a row for the full history.</p>
+  <p class="note">Prices are per plant. "Current" means the price on the seller's most recent list. Grey prices come from an older list (the plant isn't on that seller's latest list) and are not counted as cheapest. Bag prices ("bag of 5") are shown per plant and only count as cheapest when no seller offers a single plant. The % under a price is the change since that seller's previous price for the plant. Click a row for the full history.</p>
 </div>
 
 <dialog id="dlg">
   <div class="dlg-head">
-    <div><div class="genus" id="dGenus"></div><h3 id="dTitle"></h3></div>
+    <div><div class="genus" id="dGenus"></div><h2 id="dTitle"></h2></div>
     <button class="close" id="dClose">Close</button>
   </div>
   <div class="dlg-body">
@@ -332,16 +352,18 @@ function sortVal(p, key) {
   if (key === 'best') return p.best;
   if (key === 'spread') return p.spread;
   if (key.startsWith('s:')) { const c = p.cur[key.slice(2)]; return c?.current ? c.price : null; } // old prices sort last
-  if (key.startsWith('c:')) { const c = p.cur[key.slice(2)]; return c?.change ?? null; }
 }
 
 function renderTable() {
   const cols = [['name', 'Plant'], ...SELLERS.map(s => ['s:' + s, s]), ['best', 'Cheapest now'], ['spread', 'Spread'], [null, 'History']];
   $('thead').innerHTML = '<tr>' + cols.map(([k, label]) => {
-    const arrow = k && state.sort === k ? `<span class="arrow">${state.dir > 0 ? ' ▲' : ' ▼'}</span>` : '';
+    const active = k && state.sort === k;
+    const arrow = active ? `<span class="arrow" aria-hidden="true">${state.dir > 0 ? '▲' : '▼'}</span>` : '';
     const isSeller = k?.startsWith('s:');
-    const dot = isSeller ? `<span class="dot" style="background:${sellerColor(label)};margin-right:6px"></span>` : '';
-    return `<th class="${k && k !== 'name' ? 'num' : ''}${isSeller ? ' sc' : ''}" ${isSeller ? `style="--sc:${sellerColor(label)}"` : ''} ${k ? `data-k="${esc(k)}"` : ''}>${dot}${esc(label)}${arrow}</th>`;
+    const dot = isSeller ? `<span class="dot" style="background:${sellerColor(label)}"></span>` : '';
+    const sortAttr = active ? ` aria-sort="${state.dir > 0 ? 'ascending' : 'descending'}"` : '';
+    const content = k ? `<button class="sort" type="button">${dot}${esc(label)}${arrow}</button>` : esc(label);
+    return `<th class="${k && k !== 'name' ? 'num' : ''}${isSeller ? ' sc' : ''}" ${isSeller ? `style="--sc:${sellerColor(label)}"` : ''} ${k ? `data-k="${esc(k)}"` : ''}${sortAttr}>${content}</th>`;
   }).join('') + '</tr>';
 
   const rows = filtered();
@@ -352,8 +374,12 @@ function renderTable() {
     if (va == null) return 1; if (vb == null) return -1;
     return (va < vb ? -1 : va > vb ? 1 : 0) * state.dir || a.name.localeCompare(b.name);
   });
-  $('count').textContent = `${rows.length} plants`;
+  $('count').textContent = rows.length === PLANTS.length ? `${rows.length} plants` : `Showing ${rows.length} of ${PLANTS.length} plants`;
   writeHash();
+  if (!rows.length) {
+    $('tbody').innerHTML = `<tr class="empty"><td colspan="${cols.length}">No plants match these filters. <button class="linkbtn" type="button" id="reset">Clear filters</button></td></tr>`;
+    return;
+  }
   $('tbody').innerHTML = rows.map((p, i) => {
     const cells = SELLERS.map(s => {
       const c = p.cur[s];
@@ -443,8 +469,13 @@ function init(text) {
     const k = e.target.closest('th')?.dataset.k; if (!k) return;
     if (state.sort === k) state.dir *= -1; else { state.sort = k; state.dir = k === 'spread' ? -1 : 1; }
     renderTable();
+    $('thead').querySelector(`th[data-k="${CSS.escape(k)}"] .sort`)?.focus(); // keep keyboard focus on the re-rendered header
   });
-  $('tbody').addEventListener('click', e => { const tr = e.target.closest('tr'); if (tr) openDetail(PLANTS[+tr.dataset.i]); });
+  $('tbody').addEventListener('click', e => {
+    if (e.target.id === 'reset') { history.replaceState(null, '', location.pathname + location.search); readHash(); render(); $('q').focus(); return; }
+    const tr = e.target.closest('tr');
+    if (tr?.dataset.i) openDetail(PLANTS[+tr.dataset.i]);
+  });
   $('dClose').addEventListener('click', () => $('dlg').close());
   $('dlg').addEventListener('click', e => { if (e.target === $('dlg')) $('dlg').close(); });
   render();
@@ -456,7 +487,9 @@ fetch('prices.csv', { cache: 'no-cache' })
   .catch(err => {
     $('sub').innerHTML = '';
     document.querySelector('.wrap').insertAdjacentHTML('beforeend',
-      `<div class="err">Could not load <code>prices.csv</code> (${esc(String(err.message || err))}). Serve this folder over HTTP, e.g. <code>pwsh ./serve.ps1</code>, instead of opening the file directly.</div>`);
+      location.protocol === 'file:'
+        ? `<div class="err">Could not load <code>prices.csv</code>: browsers block it when the page is opened as a file. Run <code>pwsh ./serve.ps1</code> and open the address it prints.</div>`
+        : `<div class="err">The price list couldn't be loaded (${esc(String(err.message || err))}). Reload the page to try again.</div>`);
   });
 </script>
 </body>
